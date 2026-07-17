@@ -1,7 +1,11 @@
 "use client";
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
+<<<<<<< HEAD
 export type Lang = "en" | "zh";
+=======
+export type Lang = "en" | "zh" | "ms";
+>>>>>>> f2715a2 (feat: full backend mock + EN/ZH/MS i18n default EN)
 
 type Translations = typeof en;
 
@@ -11,6 +15,12 @@ const en = {
     chat: "Chat",
     rankings: "Rankings",
     docs: "Docs",
+<<<<<<< HEAD
+=======
+    activity: "Activity",
+    credits: "Credits",
+    settings: "Settings",
+>>>>>>> f2715a2 (feat: full backend mock + EN/ZH/MS i18n default EN)
     searchPlaceholder: "Search models...",
     signIn: "Sign in",
     getApiKey: "Get API Key",
@@ -82,7 +92,10 @@ const en = {
     integration: "Integration",
     copy: "Copy",
     copied: "Copied",
+<<<<<<< HEAD
     capabilities: "Capabilities",
+=======
+>>>>>>> f2715a2 (feat: full backend mock + EN/ZH/MS i18n default EN)
     context: "Context",
     inputOutput: "Input / Output",
     throughput: "Throughput",
@@ -90,7 +103,11 @@ const en = {
     primary: "Primary",
     apiEndpoint: "API Endpoint",
     headers: "Headers",
+<<<<<<< HEAD
     demoNote: "This is a clone demo. Real openrouter.ai provides billing, key management, analytics, and routing to actual providers.",
+=======
+    demoNote: "This is a full mock backend. Replace with real provider routing in production.",
+>>>>>>> f2715a2 (feat: full backend mock + EN/ZH/MS i18n default EN)
   },
   chat: {
     modelLabel: "Model:",
@@ -135,6 +152,53 @@ const en = {
     growth: "Growth",
     price: "Price",
   },
+<<<<<<< HEAD
+=======
+  activityPage: {
+    title: "Activity",
+    desc: "Your recent generations, token usage and latency. Mock data – replace with real DB logs.",
+    totalGenerations: "Total Generations",
+    totalTokens: "Total Tokens",
+    avgLatency: "Avg Latency",
+    model: "Model",
+    prompt: "Prompt",
+    tokensField: "Tokens",
+    latency: "Latency",
+    cost: "Cost",
+    status: "Status",
+    time: "Time",
+    noActivity: "No activity yet. Chat in Playground to generate logs.",
+  },
+  creditsPage: {
+    title: "Credits & Billing",
+    desc: "Manage credits, see usage breakdown and invoices. Mock Stripe integration - ready to plug.",
+    balance: "Balance",
+    addCredits: "Add Credits",
+    usageBreakdown: "Usage Breakdown",
+    invoices: "Invoices",
+    inputTokens: "Input Tokens",
+    outputTokens: "Output Tokens",
+    totalCost: "Total Cost",
+    thisMonth: "This month",
+    lastMonth: "Last month",
+    buyCreditsNote: "In production, connect Stripe: create checkout session in /api/credits/checkout",
+    mockMode: "Mock Mode – No real charges",
+  },
+  settingsPage: {
+    title: "Settings",
+    desc: "Account preferences, team and integrations. Ready for real auth.",
+    profile: "Profile",
+    preferences: "Preferences",
+    team: "Team",
+    language: "Language",
+    theme: "Theme",
+    defaultModel: "Default Model",
+    email: "Email",
+    save: "Save changes",
+    saved: "Saved!",
+    languageDesc: "Interface language. Default is English.",
+  },
+>>>>>>> f2715a2 (feat: full backend mock + EN/ZH/MS i18n default EN)
   docsPage: {
     title: "OpenRouter Clone Docs",
     subtitle: "Drop-in OpenAI-compatible API for all models.",
@@ -151,6 +215,7 @@ const en = {
     baseUrl: "Base URL",
     exampleRequest: "Example Request",
     cloneProject: "This Clone Project",
+<<<<<<< HEAD
     cloneDesc: "This is a high-fidelity clone built with Next.js 14 + Tailwind. It includes:",
     cloneList: [
       "Landing page with hero, code demo, stats",
@@ -169,6 +234,24 @@ const en = {
       "Add auth via NextAuth / Clerk",
       "Implement real billing via Stripe",
       "Connect to OpenRouter API to fetch live models list: GET https://openrouter.ai/api/v1/models",
+=======
+    cloneDesc: "Full-stack mock of OpenRouter with pluggable real backend:",
+    cloneList: [
+      "Landing page, Models, Rankings, Activity, Credits, Settings",
+      "Chat Playground with streaming mock",
+      "API Keys CRUD (mock DB)",
+      "Complete REST API: /api/v1/models, /chat/completions, /credits, /activity, /keys",
+      "Service layer in src/lib/openrouter-service.ts – swap mock for real",
+      "Dark theme + i18n EN/ZH/MS",
+    ],
+    toMakeLive: "How to plug real data:",
+    toMakeList: [
+      "Set env keys in .env.local (OPENAI_API_KEY etc.) and implement real calls in src/lib/openrouter-service.ts",
+      "Replace mockStore with Prisma + Postgres – models already typed in src/lib/db/mockStore.ts",
+      "Wire Stripe in src/app/api/v1/credits/route.ts",
+      "Add NextAuth for real login – see src/app/api/v1/auth/me/route.ts",
+      "Frontend already calls mock API – no change needed",
+>>>>>>> f2715a2 (feat: full backend mock + EN/ZH/MS i18n default EN)
     ],
   },
   footer: {
@@ -181,6 +264,12 @@ const en = {
   },
   common: {
     language: "Language",
+<<<<<<< HEAD
+=======
+    english: "English",
+    chinese: "中文",
+    malay: "Bahasa Melayu",
+>>>>>>> f2715a2 (feat: full backend mock + EN/ZH/MS i18n default EN)
   },
 };
 
@@ -190,6 +279,12 @@ const zh = {
     chat: "对话",
     rankings: "排行榜",
     docs: "文档",
+<<<<<<< HEAD
+=======
+    activity: "活动记录",
+    credits: "余额计费",
+    settings: "设置",
+>>>>>>> f2715a2 (feat: full backend mock + EN/ZH/MS i18n default EN)
     searchPlaceholder: "搜索模型...",
     signIn: "登录",
     getApiKey: "获取 API Key",
@@ -256,7 +351,10 @@ const zh = {
     integration: "接入代码",
     copy: "复制",
     copied: "已复制",
+<<<<<<< HEAD
     capabilities: "能力",
+=======
+>>>>>>> f2715a2 (feat: full backend mock + EN/ZH/MS i18n default EN)
     context: "上下文",
     inputOutput: "输入 / 输出",
     throughput: "吞吐",
@@ -264,16 +362,26 @@ const zh = {
     primary: "主节点",
     apiEndpoint: "API 端点",
     headers: "请求头",
+<<<<<<< HEAD
     demoNote: "这是克隆演示站，真实的 openrouter.ai 提供计费、密钥管理、分析和路由到真实提供商。",
+=======
+    demoNote: "这是完整的前后端 Mock，已预留真实接入插槽，生产环境替换 openrouter-service 即可。",
+>>>>>>> f2715a2 (feat: full backend mock + EN/ZH/MS i18n default EN)
   },
   chat: {
     modelLabel: "模型：",
     context: "上下文",
     tokens: "tokens",
     clear: "清空",
+<<<<<<< HEAD
     welcome: "你好！我是 OpenRouter 克隆版。在顶部选择一个模型开始聊天。这是 UI 演示——回复是模拟的，但界面和 OpenRouter 的 playground 一致。",
     placeholder: "给模型发消息... (Shift+回车换行)",
     demoNote: "演示用 playground，无真实 API 调用。在 Keys 页面连接你的 API Key 即可变成真实对话。",
+=======
+    welcome: "你好！我是 OpenRouter 克隆版。在顶部选择一个模型开始聊天，这是完整 Mock 后端，已记录到活动页。",
+    placeholder: "给模型发消息... (Shift+回车换行)",
+    demoNote: "Mock 后端已就绪，真实接入只需替换 Service 层，零前端改动。",
+>>>>>>> f2715a2 (feat: full backend mock + EN/ZH/MS i18n default EN)
     parameters: "参数",
     temperature: "温度",
     topP: "Top P",
@@ -298,7 +406,11 @@ const zh = {
     quickstart: "快速开始",
     billing: "计费",
     currentUsage: "本月用量",
+<<<<<<< HEAD
     demoNote: "这是演示克隆站，无真实扣费。生产环境中你会通过 Stripe 充值、查看分析、设置限额等。",
+=======
+    demoNote: "这是完整的 Mock 后端，生产环境对接 Stripe 和数据库即可。",
+>>>>>>> f2715a2 (feat: full backend mock + EN/ZH/MS i18n default EN)
     creditsIncluded: "包含额度",
   },
   rankingsPage: {
@@ -309,6 +421,53 @@ const zh = {
     growth: "增长",
     price: "价格",
   },
+<<<<<<< HEAD
+=======
+  activityPage: {
+    title: "活动记录",
+    desc: "你的生成历史、Token 用量和延迟。Mock 数据，已预留真实 DB 接入。",
+    totalGenerations: "总生成数",
+    totalTokens: "总 Tokens",
+    avgLatency: "平均延迟",
+    model: "模型",
+    prompt: "提示词",
+    tokensField: "Tokens",
+    latency: "延迟",
+    cost: "费用",
+    status: "状态",
+    time: "时间",
+    noActivity: "还没有活动，去 Playground 聊天即可生成记录。",
+  },
+  creditsPage: {
+    title: "余额与计费",
+    desc: "管理余额、查看用量明细和发票。已预留 Stripe 接入。",
+    balance: "余额",
+    addCredits: "充值",
+    usageBreakdown: "用量明细",
+    invoices: "发票",
+    inputTokens: "输入 Tokens",
+    outputTokens: "输出 Tokens",
+    totalCost: "总费用",
+    thisMonth: "本月",
+    lastMonth: "上月",
+    buyCreditsNote: "生产环境对接 Stripe：在 /api/credits/checkout 创建支付会话",
+    mockMode: "Mock 模式 – 无真实扣费",
+  },
+  settingsPage: {
+    title: "设置",
+    desc: "账户偏好、团队和集成。已预留真实登录。",
+    profile: "个人资料",
+    preferences: "偏好",
+    team: "团队",
+    language: "语言",
+    theme: "主题",
+    defaultModel: "默认模型",
+    email: "邮箱",
+    save: "保存修改",
+    saved: "已保存！",
+    languageDesc: "界面语言，默认英文。",
+  },
+>>>>>>> f2715a2 (feat: full backend mock + EN/ZH/MS i18n default EN)
   docsPage: {
     title: "OpenRouter 克隆版文档",
     subtitle: "兼容 OpenAI 的多模型 API。",
@@ -325,6 +484,7 @@ const zh = {
     baseUrl: "Base URL",
     exampleRequest: "请求示例",
     cloneProject: "本克隆项目",
+<<<<<<< HEAD
     cloneDesc: "这是一个用 Next.js 14 + Tailwind 高仿的克隆，包含：",
     cloneList: [
       "带 Hero、代码演示、统计的着陆页",
@@ -343,6 +503,24 @@ const zh = {
       "添加登录 (NextAuth / Clerk)",
       "通过 Stripe 实现真实计费",
       "对接 OpenRouter 官方接口获取实时模型列表：GET https://openrouter.ai/api/v1/models",
+=======
+    cloneDesc: "完整的前后端 Mock，已预留真实后端插槽：",
+    cloneList: [
+      "着陆页、模型、排行、活动、余额、设置",
+      "带流式 Mock 的聊天 Playground",
+      "API Keys 的增删改查 (Mock DB)",
+      "完整 REST API：/api/v1/models, /chat/completions, /credits, /activity, /keys",
+      "Service 层在 src/lib/openrouter-service.ts – 可一键替换为真实",
+      "暗色主题 + 三语 EN/ZH/MS",
+    ],
+    toMakeLive: "如何接入真实数据：",
+    toMakeList: [
+      "在 .env.local 配置密钥，在 src/lib/openrouter-service.ts 实现真实调用",
+      "用 Prisma + Postgres 替换 mockStore，模型已在 src/lib/db/mockStore.ts 定义",
+      "在 src/app/api/v1/credits/route.ts 对接 Stripe",
+      "用 NextAuth 实现真实登录，参考 src/app/api/v1/auth/me/route.ts",
+      "前端已调用 Mock API，无需改动",
+>>>>>>> f2715a2 (feat: full backend mock + EN/ZH/MS i18n default EN)
     ],
   },
   footer: {
@@ -355,10 +533,241 @@ const zh = {
   },
   common: {
     language: "语言",
+<<<<<<< HEAD
   },
 };
 
 export const translations = { en, zh };
+=======
+    english: "English",
+    chinese: "中文",
+    malay: "Bahasa Melayu",
+  },
+};
+
+const ms = {
+  nav: {
+    models: "Model",
+    chat: "Sembang",
+    rankings: "Kedudukan",
+    docs: "Dok",
+    activity: "Aktiviti",
+    credits: "Kredit",
+    settings: "Tetapan",
+    searchPlaceholder: "Cari model...",
+    signIn: "Log masuk",
+    getApiKey: "Dapatkan Kunci API",
+  },
+  home: {
+    badge: "Semua sistem beroperasi • 99.99% uptime",
+    title1: "Antara Muka",
+    title2: "Bersatu Untuk LLM",
+    subtitle: "Satu API untuk ratusan model AI. Harga lebih baik, uptime lebih tinggi, tanpa langganan. Akses GPT-4o, Claude 3.5, Gemini, Llama dan banyak lagi.",
+    exploreModels: "Terokai Model",
+    tryPlayground: "Cuba Playground",
+    statModels: "Model AI",
+    statProviders: "Pembekal",
+    statStart: "0 untuk mula, bayar ikut guna",
+    codeHeader: "serasi openai • contoh curl",
+    codeTitle: "Satu API, Ratusan Model",
+    codeFeatures: ["Fallback & retry automatik", "Load balancing & caching", "200+ model, 50+ pembekal", "Billing & kunci bersatu"],
+    tokensProcessed: "Token diproses bulanan",
+    popularModels: "Model Popular",
+    popularDesc: "Akses model terbaik melalui API serasi OpenAI. Auto-routing, fallback, harga lebih rendah.",
+    filterPlaceholder: "Tapisan model (cth. Claude, vision)",
+    viewAll: "Lihat semua",
+    features: [
+      { title: "API Bersatu", desc: "API serasi OpenAI untuk 200+ model. Tukar model dengan satu baris. Tiada vendor lock-in." },
+      { title: "Uptime Tinggi", desc: "Fallback automatik, load balancing dan retry merentasi banyak pembekal." },
+      { title: "Harga Lebih Baik", desc: "Cari harga terbaik untuk mana-mana model. Jimat hingga 80% vs API terus." },
+    ],
+  },
+  modelsPage: {
+    title: "Model",
+    desc: "Layari 200+ model merentasi 50+ pembekal. Satu kunci API, serasi OpenAI, dengan fallback dan load balancing.",
+    searchPlaceholder: "Cari mengikut nama, pembekal, keupayaan...",
+    vision: "Visi",
+    free: "Percuma",
+    sortTop: "Bulanan teratas",
+    sortNew: "Terbaru",
+    sortPrice: "Harga terendah",
+    sortContext: "Konteks terpanjang",
+    modelsCount: "model",
+    noMatch: "Tiada model sepadan dengan tapisan anda",
+    clearFilters: "Kosongkan tapisan",
+    infoContextTitle: "Apakah panjang konteks?",
+    infoContextDesc: "Token maksimum model boleh proses dalam satu permintaan. 1K ~ 750 perkataan.",
+    infoPricingTitle: "Harga per 1M token",
+    infoPricingDesc: "Input = token prompt, Output = token completion. Bayar apa yang anda guna.",
+    infoCompatTitle: "Serasi OpenAI",
+    infoCompatDesc: "Tukar baseURL ke openrouter.ai/api/v1, guna semula SDK OpenAI. Drop-in replacement.",
+  },
+  modelCard: {
+    context: "Konteks",
+    input: "Input",
+    output: "Output",
+    viewDetails: "Lihat butiran →",
+  },
+  modelDetail: {
+    back: "Kembali ke model",
+    tryModel: "Cuba model ini",
+    openPlayground: "Buka di Playground",
+    contextLength: "Panjang konteks",
+    trainingCutoff: "Cutoff latihan",
+    functionCalling: "Panggilan fungsi",
+    structuredOutput: "Output berstruktur",
+    supported: "Disokong",
+    integration: "Integrasi",
+    copy: "Salin",
+    copied: "Disalin",
+    context: "Konteks",
+    inputOutput: "Input / Output",
+    throughput: "Throughput",
+    providers: "Pembekal",
+    primary: "Utama",
+    apiEndpoint: "Endpoint API",
+    headers: "Headers",
+    demoNote: "Ini adalah backend mock penuh. Gantikan dengan routing pembekal sebenar dalam pengeluaran.",
+  },
+  chat: {
+    modelLabel: "Model:",
+    context: "Konteks",
+    tokens: "token",
+    clear: "Kosongkan",
+    welcome: "Hai! Saya klon OpenRouter. Pilih model di atas dan mula bersembang. Ini adalah demo UI – respons adalah mock tetapi antara muka sepadan dengan playground OpenRouter.",
+    placeholder: "Mesej model... (Shift+Enter untuk baris baru)",
+    demoNote: "Playground demo – tiada panggilan API sebenar. Sambungkan kunci API anda di halaman Keys untuk menjadikannya live.",
+    parameters: "Parameter",
+    temperature: "Suhu",
+    topP: "Top P",
+    maxTokens: "Token Maks",
+    estimatedCost: "Anggaran kos",
+    thisChat: "sembang ini",
+    inputTokens: "token input",
+    output: "output",
+    descTemp: "Kawal rawak",
+    descTopP: "Persampelan nukleus",
+    descMax: "Panjang respons",
+    you: "Anda",
+  },
+  keysPage: {
+    title: "Kunci API",
+    desc: "Urus kunci API OpenRouter anda. Rahsiakan!",
+    createKey: "Cipta Kunci",
+    created: "Dicipta",
+    lastUsed: "Terakhir digunakan",
+    used: "digunakan",
+    edit: "Edit",
+    quickstart: "Mula cepat",
+    billing: "Pengebilan",
+    currentUsage: "Penggunaan bulan semasa",
+    demoNote: "Ini adalah klon demo – tiada pengebilan sebenar. Dalam pengeluaran, anda akan tambah kredit melalui Stripe, lihat analitik, tetapkan had, dsb.",
+    creditsIncluded: "kredit termasuk",
+  },
+  rankingsPage: {
+    title: "Kedudukan",
+    desc: "Model teratas mengikut penggunaan 7 hari lepas. OpenRouter sebenar dikemas kini setiap jam.",
+    model: "Model",
+    tokens: "Token (7h)",
+    growth: "Pertumbuhan",
+    price: "Harga",
+  },
+  activityPage: {
+    title: "Aktiviti",
+    desc: "Generasi terkini anda, penggunaan token dan latensi. Data mock – ganti dengan log DB sebenar.",
+    totalGenerations: "Jumlah Generasi",
+    totalTokens: "Jumlah Token",
+    avgLatency: "Purata Latensi",
+    model: "Model",
+    prompt: "Prompt",
+    tokensField: "Token",
+    latency: "Latensi",
+    cost: "Kos",
+    status: "Status",
+    time: "Masa",
+    noActivity: "Tiada aktiviti lagi. Sembang di Playground untuk menjana log.",
+  },
+  creditsPage: {
+    title: "Kredit & Pengebilan",
+    desc: "Urus kredit, lihat pecahan penggunaan dan invois. Integrasi Stripe mock - sedia untuk plug.",
+    balance: "Baki",
+    addCredits: "Tambah Kredit",
+    usageBreakdown: "Pecahan Penggunaan",
+    invoices: "Invois",
+    inputTokens: "Token Input",
+    outputTokens: "Token Output",
+    totalCost: "Jumlah Kos",
+    thisMonth: "Bulan ini",
+    lastMonth: "Bulan lepas",
+    buyCreditsNote: "Dalam pengeluaran, sambungkan Stripe: cipta sesi checkout di /api/credits/checkout",
+    mockMode: "Mod Mock – Tiada caj sebenar",
+  },
+  settingsPage: {
+    title: "Tetapan",
+    desc: "Keutamaan akaun, pasukan dan integrasi. Sedia untuk auth sebenar.",
+    profile: "Profil",
+    preferences: "Keutamaan",
+    team: "Pasukan",
+    language: "Bahasa",
+    theme: "Tema",
+    defaultModel: "Model Lalai",
+    email: "Emel",
+    save: "Simpan perubahan",
+    saved: "Disimpan!",
+    languageDesc: "Bahasa antara muka. Lalai ialah Bahasa Inggeris.",
+  },
+  docsPage: {
+    title: "Dok Klon OpenRouter",
+    subtitle: "API serasi OpenAI drop-in untuk semua model.",
+    gettingStarted: "Bermula",
+    quickstart: "Mula Cepat",
+    authentication: "Pengesahan",
+    models: "Model",
+    streaming: "Streaming",
+    features: "Ciri",
+    routing: "Routing & Fallback",
+    sorting: "Isihan Pembekal",
+    functionCalling: "Panggilan Fungsi",
+    vision: "Visi",
+    baseUrl: "Base URL",
+    exampleRequest: "Contoh Permintaan",
+    cloneProject: "Projek Klon Ini",
+    cloneDesc: "Mock full-stack OpenRouter dengan backend sebenar boleh pasang:",
+    cloneList: [
+      "Landing, Model, Kedudukan, Aktiviti, Kredit, Tetapan",
+      "Chat Playground dengan streaming mock",
+      "CRUD Kunci API (mock DB)",
+      "REST API lengkap: /api/v1/models, /chat/completions, /credits, /activity, /keys",
+      "Lapisan servis di src/lib/openrouter-service.ts – tukar mock ke sebenar",
+      "Tema gelap + i18n EN/ZH/MS",
+    ],
+    toMakeLive: "Cara pasang data sebenar:",
+    toMakeList: [
+      "Tetapkan kunci env dalam .env.local dan laksana panggilan sebenar dalam src/lib/openrouter-service.ts",
+      "Ganti mockStore dengan Prisma + Postgres – model sudah ditaip dalam src/lib/db/mockStore.ts",
+      "Wayar Stripe dalam src/app/api/v1/credits/route.ts",
+      "Tambah NextAuth untuk log masuk sebenar – lihat src/app/api/v1/auth/me/route.ts",
+      "Frontend sudah panggil mock API – tiada perubahan diperlukan",
+    ],
+  },
+  footer: {
+    builtFor: "Klon OpenRouter - Dibuat untuk demonstrasi",
+    gateway: "Gerbang LLM Bersatu",
+    status: "Status",
+    github: "GitHub",
+    twitter: "Twitter",
+    discord: "Discord",
+  },
+  common: {
+    language: "Bahasa",
+    english: "English",
+    chinese: "中文",
+    malay: "Bahasa Melayu",
+  },
+};
+
+export const translations = { en, zh, ms };
+>>>>>>> f2715a2 (feat: full backend mock + EN/ZH/MS i18n default EN)
 
 type I18nContextType = {
   lang: Lang;
@@ -373,17 +782,32 @@ export function I18nProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const saved = localStorage.getItem("lang") as Lang | null;
+<<<<<<< HEAD
     if (saved && (saved === "en" || saved === "zh")) {
       setLangState(saved);
     } else {
       const browserLang = navigator.language.toLowerCase();
       if (browserLang.startsWith("zh")) setLangState("zh");
+=======
+    if (saved && (saved === "en" || saved === "zh" || saved === "ms")) {
+      setLangState(saved);
+    } else {
+      // Default is English as requested, only auto-switch if explicit zh/ms
+      const browserLang = navigator.language.toLowerCase();
+      if (browserLang.startsWith("zh")) setLangState("zh");
+      else if (browserLang.startsWith("ms") || browserLang.startsWith("id")) setLangState("ms");
+      else setLangState("en");
+>>>>>>> f2715a2 (feat: full backend mock + EN/ZH/MS i18n default EN)
     }
   }, []);
 
   const setLang = (l: Lang) => {
     setLangState(l);
     localStorage.setItem("lang", l);
+<<<<<<< HEAD
+=======
+    document.documentElement.lang = l;
+>>>>>>> f2715a2 (feat: full backend mock + EN/ZH/MS i18n default EN)
   };
 
   const value: I18nContextType = {

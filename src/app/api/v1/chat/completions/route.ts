@@ -1,9 +1,14 @@
 import { NextResponse } from "next/server";
+<<<<<<< HEAD
 import { models } from "@/lib/models";
+=======
+import { chatCompletions, chatCompletionsStream } from "@/lib/openrouter-service";
+>>>>>>> f2715a2 (feat: full backend mock + EN/ZH/MS i18n default EN)
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
+<<<<<<< HEAD
     const { model: modelId, messages, stream = false } = body;
 
     const model = models.find((m) => m.id === modelId) || models[0];
@@ -42,6 +47,13 @@ export async function POST(req: Request) {
       });
 
       return new Response(stream, {
+=======
+    const { stream = false } = body;
+
+    if (stream) {
+      const streamBody = await chatCompletionsStream(body);
+      return new Response(streamBody, {
+>>>>>>> f2715a2 (feat: full backend mock + EN/ZH/MS i18n default EN)
         headers: {
           "Content-Type": "text/event-stream",
           "Cache-Control": "no-cache",
@@ -50,6 +62,7 @@ export async function POST(req: Request) {
       });
     }
 
+<<<<<<< HEAD
     // Non-streaming mock
     return NextResponse.json({
       id: `chatcmpl-${Date.now()}`,
@@ -72,6 +85,10 @@ export async function POST(req: Request) {
         total_tokens: Math.floor(lastMessage.length / 4) + 120,
       },
     });
+=======
+    const result = await chatCompletions(body);
+    return NextResponse.json(result);
+>>>>>>> f2715a2 (feat: full backend mock + EN/ZH/MS i18n default EN)
   } catch (e: any) {
     return NextResponse.json({ error: { message: e.message, code: "internal_error" } }, { status: 500 });
   }
@@ -84,5 +101,9 @@ export async function GET() {
       model: "openai/gpt-4o",
       messages: [{ role: "user", content: "Hello" }],
     },
+<<<<<<< HEAD
+=======
+    note: "This is a full mock backend. Replace src/lib/openrouter-service.ts with real provider calls for production.",
+>>>>>>> f2715a2 (feat: full backend mock + EN/ZH/MS i18n default EN)
   });
 }
