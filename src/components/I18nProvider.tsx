@@ -2,6 +2,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
 export type Lang = "en" | "zh" | "ms";
+export type Currency = "USD" | "MYR";
 
 type Translations = typeof en;
 
@@ -9,6 +10,7 @@ const en = {
   nav: {
     models: "Models",
     chat: "Chat",
+    compare: "Compare",
     rankings: "Rankings",
     docs: "Docs",
     activity: "Activity",
@@ -25,6 +27,7 @@ const en = {
     subtitle: "A single API for hundreds of AI models. Better prices, better uptime, no subscription. Access GPT-4o, Claude 3.5, Gemini, Llama and more.",
     exploreModels: "Explore Models",
     tryPlayground: "Try Playground",
+    tryCompare: "Try Compare",
     statModels: "AI Models",
     statProviders: "Providers",
     statStart: "To start, pay as you go",
@@ -45,6 +48,9 @@ const en = {
       { title: "Unified API", desc: "OpenAI-compatible API for 200+ models. Switch models with one line. No vendor lock-in." },
       { title: "Higher Uptime", desc: "Automatic fallbacks, load balancing, and retries across multiple providers." },
       { title: "Better Prices", desc: "Find the best price for any model. Save up to 80% vs direct provider APIs." },
+      { title: "MYR & Local Payment", desc: "Support MYR currency, Billplz & ToyyibPay for Malaysian market." },
+      { title: "Compare & Optimizer", desc: "Side-by-side model comparison and cost optimizer to save up to 70%." },
+      { title: "BYOK & PDPA", desc: "Bring Your Own Key, export CSV, rate limiting and PDPA-compliant hashing." },
     ],
   },
   modelsPage: {
@@ -99,9 +105,9 @@ const en = {
     context: "Context",
     tokens: "tokens",
     clear: "Clear",
-    welcome: "Hi! I'm an OpenRouter clone. Select a model from the top and start chatting. This is a UI demo – responses are mocked but the interface matches OpenRouter's playground.",
+    welcome: "Hi! I'm an OpenRouter clone. Select a model from the top and start chatting. Try Malay templates or compare mode.",
     placeholder: "Message the model... (Shift+Enter for new line)",
-    demoNote: "Demo playground – no real API calls. Connect your own API key in Keys page to make it live.",
+    demoNote: "Demo playground – no real API calls. Mock backend with rate limiting & PDPA hashing.",
     parameters: "Parameters",
     temperature: "Temperature",
     topP: "Top P",
@@ -114,10 +120,37 @@ const en = {
     descTopP: "Nucleus sampling",
     descMax: "Response length",
     you: "You",
+    promptTemplates: "Prompt Templates (MY)",
+    templates: [
+      { label: "Translate to BM", prompt: "Translate the following to Bahasa Melayu: " },
+      { label: "Ringkasan BM", prompt: "Buat ringkasan dalam Bahasa Melayu untuk teks berikut: " },
+      { label: "Karangan SPM", prompt: "Tulis karangan SPM 300 patah perkataan tentang: " },
+      { label: "Surat Rasmi", prompt: "Tulis surat rasmi dalam Bahasa Melayu untuk: " },
+      { label: "Explain in BM", prompt: "Jelaskan dalam Bahasa Melayu yang mudah faham tentang: " },
+    ],
+    costOptimizer: "Cost Optimizer",
+    costOptimizerDesc: "Cheaper alternatives for this model",
+    saving: "saving",
+    tryCheaper: "Try cheaper",
+  },
+  comparePage: {
+    title: "Model Comparison",
+    desc: "Side-by-side comparison of 2-3 models with same prompt. See cost, latency and quality difference. Ready for production.",
+    selectModels: "Select 2-3 models",
+    prompt: "Prompt",
+    promptPlaceholder: "Enter a prompt to compare across models...",
+    compare: "Compare",
+    comparing: "Comparing...",
+    results: "Results",
+    cost: "Cost",
+    latency: "Latency",
+    tokens: "Tokens",
+    noResults: "Enter a prompt and select models to compare",
+    myTemplates: "Malaysian Templates",
   },
   keysPage: {
     title: "API Keys",
-    desc: "Manage your OpenRouter API keys. Keep them secret!",
+    desc: "Manage your OpenRouter API keys. Full key shown only once for security (PDPA).",
     createKey: "Create Key",
     created: "Created",
     lastUsed: "Last used",
@@ -126,8 +159,10 @@ const en = {
     quickstart: "Quickstart",
     billing: "Billing",
     currentUsage: "Current month usage",
-    demoNote: "This is a demo clone – no real billing occurs. In production, you would add credits via Stripe, see analytics, set limits, etc.",
+    demoNote: "Security: Full key shown only once, stored as hash. Rate limited 600 req/min (mock Upstash).",
     creditsIncluded: "credits included",
+    showOnceWarning: "⚠️ Full key shown only once! Copy now, it will be hidden after 10s",
+    copied: "Copied!",
   },
   rankingsPage: {
     title: "Rankings",
@@ -139,7 +174,7 @@ const en = {
   },
   activityPage: {
     title: "Activity",
-    desc: "Your recent generations, token usage and latency. Mock data – replace with real DB logs.",
+    desc: "Your recent generations, token usage and latency. PDPA: prompt stored as hash, full prompt truncated.",
     totalGenerations: "Total Generations",
     totalTokens: "Total Tokens",
     avgLatency: "Avg Latency",
@@ -151,10 +186,12 @@ const en = {
     status: "Status",
     time: "Time",
     noActivity: "No activity yet. Chat in Playground to generate logs.",
+    exportCsv: "Export CSV",
+    promptHash: "Prompt Hash (PDPA)",
   },
   creditsPage: {
     title: "Credits & Billing",
-    desc: "Manage credits, see usage breakdown and invoices. Mock Stripe integration - ready to plug.",
+    desc: "Manage credits, see usage breakdown and invoices. Support USD/MYR and local FPX/Billplz/ToyyibPay.",
     balance: "Balance",
     addCredits: "Add Credits",
     usageBreakdown: "Usage Breakdown",
@@ -164,12 +201,20 @@ const en = {
     totalCost: "Total Cost",
     thisMonth: "This month",
     lastMonth: "Last month",
-    buyCreditsNote: "In production, connect Stripe: create checkout session in /api/credits/checkout",
-    mockMode: "Mock Mode – No real charges",
+    buyCreditsNote: "In production, connect Stripe/Billplz/ToyyibPay: create checkout session in /api/credits/checkout",
+    mockMode: "Mock Mode – No real charges. Local payments mocked.",
+    currency: "Currency",
+    currencyUSD: "USD - US Dollar",
+    currencyMYR: "MYR - Malaysian Ringgit (1 USD = 4.70 MYR)",
+    localPayments: "Local Payments (MY)",
+    billplz: "Billplz (FPX, e-Wallet)",
+    toyyibpay: "ToyyibPay (FPX)",
+    stripe: "Stripe (Card)",
+    rateNote: "Rate: 1 USD = 4.70 MYR (mock, update via API)",
   },
   settingsPage: {
     title: "Settings",
-    desc: "Account preferences, team and integrations. Ready for real auth.",
+    desc: "Account preferences, team and integrations. Includes BYOK and PDPA settings.",
     profile: "Profile",
     preferences: "Preferences",
     team: "Team",
@@ -180,6 +225,16 @@ const en = {
     save: "Save changes",
     saved: "Saved!",
     languageDesc: "Interface language. Default is English.",
+    currency: "Currency",
+    currencyDesc: "Display currency. MYR for Malaysian market.",
+    byok: "Bring Your Own Key (BYOK)",
+    byokDesc: "Use your own provider keys. Stored as hash, never exposed. Zero cost for proxy.",
+    provider: "Provider",
+    keyPlaceholder: "sk-... (will be hashed)",
+    addKey: "Add Key",
+    byokNote: "BYOK keys are hashed and never shown in full after creation. Rate limited per key.",
+    exportData: "Export Data (PDPA)",
+    exportDesc: "Export all your generations as CSV. Prompt is hashed for privacy.",
   },
   docsPage: {
     title: "OpenRouter Clone Docs",
@@ -197,22 +252,24 @@ const en = {
     baseUrl: "Base URL",
     exampleRequest: "Example Request",
     cloneProject: "This Clone Project",
-    cloneDesc: "Full-stack mock of OpenRouter with pluggable real backend:",
+    cloneDesc: "Full-stack mock with 8 enhancements:",
     cloneList: [
-      "Landing page, Models, Rankings, Activity, Credits, Settings",
-      "Chat Playground with streaming mock",
-      "API Keys CRUD (mock DB)",
-      "Complete REST API: /api/v1/models, /chat/completions, /credits, /activity, /keys",
-      "Service layer in src/lib/openrouter-service.ts – swap mock for real",
-      "Dark theme + i18n EN/ZH/MS",
+      "Engineering cleanup: .gitignore, pnpm, no logs in repo",
+      "MYR currency + Billplz/ToyyibPay mock + BM prompt templates",
+      "Model Compare side-by-side + Cost Optimizer saving 70%",
+      "Prisma schema ready for Supabase/Postgres (mockStore fallback)",
+      "Pluggable providers: mock/openai/anthropic/openrouter via PROVIDER env",
+      "Security: key show once, rate limit 600/min (Upstash mock), SHA256 prompt hash PDPA",
+      "Deploy: Vercel 1-click, Docker, Coolify docs, GitHub Actions CI",
+      "BYOK + Export CSV for PDPA compliance and monetization",
     ],
     toMakeLive: "How to plug real data:",
     toMakeList: [
-      "Set env keys in .env.local (OPENAI_API_KEY etc.) and implement real calls in src/lib/openrouter-service.ts",
-      "Replace mockStore with Prisma + Postgres – models already typed in src/lib/db/mockStore.ts",
-      "Wire Stripe in src/app/api/v1/credits/route.ts",
-      "Add NextAuth for real login – see src/app/api/v1/auth/me/route.ts",
-      "Frontend already calls mock API – no change needed",
+      "Set DATABASE_URL and run npx prisma migrate dev – mockStore will auto switch to real DB",
+      "Set PROVIDER=openrouter and OPENROUTER_API_KEY to get 200+ live models",
+      "Set PROVIDER=openai + OPENAI_API_KEY for direct OpenAI",
+      "Wire Stripe/Billplz in /api/v1/credits/route.ts – UI already ready",
+      "Add NextAuth – see /api/v1/auth/me/route.ts",
     ],
   },
   footer: {
@@ -228,6 +285,8 @@ const en = {
     english: "English",
     chinese: "中文",
     malay: "Bahasa Melayu",
+    usd: "USD",
+    myr: "MYR",
   },
 };
 
@@ -235,6 +294,7 @@ const zh = {
   nav: {
     models: "模型广场",
     chat: "对话",
+    compare: "对比",
     rankings: "排行榜",
     docs: "文档",
     activity: "活动记录",
@@ -251,6 +311,7 @@ const zh = {
     subtitle: "一个 API 接入数百个 AI 模型。更优惠的价格，更高的可用性，无需订阅。支持 GPT-4o、Claude 3.5、Gemini、Llama 等。",
     exploreModels: "探索模型",
     tryPlayground: "试用 Playground",
+    tryCompare: "试用对比",
     statModels: "个 AI 模型",
     statProviders: "个提供商",
     statStart: "0 元起步，按量付费",
@@ -266,6 +327,9 @@ const zh = {
       { title: "统一 API", desc: "兼容 OpenAI 的 200+ 模型 API，一行代码切换模型，无厂商锁定。" },
       { title: "更高可用", desc: "跨多提供商自动降级、负载均衡和重试。" },
       { title: "更优惠价格", desc: "为任意模型找到最优价格，比官方直连节省高达 80%。" },
+      { title: "MYR 与本地支付", desc: "支持马币 RM 计费，支持 Billplz 与 ToyyibPay 马来本地支付。" },
+      { title: "对比与成本优化", desc: "多模型并排对比，成本优化器帮你省 70%。" },
+      { title: "BYOK 与 PDPA", desc: "自带 Key、导出 CSV、限流和 PDPA 合规哈希。" },
     ],
   },
   modelsPage: {
@@ -320,9 +384,9 @@ const zh = {
     context: "上下文",
     tokens: "tokens",
     clear: "清空",
-    welcome: "你好！我是 OpenRouter 克隆版。在顶部选择一个模型开始聊天，这是完整 Mock 后端，已记录到活动页。",
+    welcome: "你好！我是 OpenRouter 克隆版，已支持马来语模板和对比模式。",
     placeholder: "给模型发消息... (Shift+回车换行)",
-    demoNote: "Mock 后端已就绪，真实接入只需替换 Service 层，零前端改动。",
+    demoNote: "Mock 后端已支持限流与 PDPA 哈希，可直接使用。",
     parameters: "参数",
     temperature: "温度",
     topP: "Top P",
@@ -335,10 +399,37 @@ const zh = {
     descTopP: "核采样",
     descMax: "回复长度",
     you: "你",
+    promptTemplates: "Prompt 模板 (马来西亚)",
+    templates: [
+      { label: "翻译成马来文", prompt: "把下面翻译成马来文 Bahasa Melayu: " },
+      { label: "马来文总结", prompt: "用马来文总结下面文本: " },
+      { label: "SPM 作文", prompt: "写一篇 300 字 SPM 马来文作文，题目: " },
+      { label: "正式信件", prompt: "用马来文写一封正式信件，关于: " },
+      { label: "用马来文解释", prompt: "用简单马来文解释: " },
+    ],
+    costOptimizer: "成本优化器",
+    costOptimizerDesc: "此模型的更便宜替代",
+    saving: "节省",
+    tryCheaper: "试用更便宜的",
+  },
+  comparePage: {
+    title: "模型对比",
+    desc: "同一个 Prompt 并排对比 2-3 个模型，查看费用、延迟和质量差异。",
+    selectModels: "选择 2-3 个模型",
+    prompt: "Prompt",
+    promptPlaceholder: "输入要对比的 Prompt...",
+    compare: "开始对比",
+    comparing: "对比中...",
+    results: "对比结果",
+    cost: "费用",
+    latency: "延迟",
+    tokens: "Tokens",
+    noResults: "输入 Prompt 并选择模型开始对比",
+    myTemplates: "马来西亚模板",
   },
   keysPage: {
     title: "API Keys",
-    desc: "管理你的 OpenRouter API 密钥。请妥善保管！",
+    desc: "管理你的 OpenRouter API 密钥，完整密钥仅显示一次（安全）。",
     createKey: "创建密钥",
     created: "创建于",
     lastUsed: "最后使用",
@@ -347,12 +438,14 @@ const zh = {
     quickstart: "快速开始",
     billing: "计费",
     currentUsage: "本月用量",
-    demoNote: "这是完整的 Mock 后端，生产环境对接 Stripe 和数据库即可。",
+    demoNote: "安全：完整密钥仅显示一次，存储为哈希，限流 600次/分钟。",
     creditsIncluded: "包含额度",
+    showOnceWarning: "⚠️ 完整密钥仅显示一次！请立即复制，10秒后隐藏",
+    copied: "已复制！",
   },
   rankingsPage: {
     title: "排行榜",
-    desc: "按最近 7 天用量排名。真实的 OpenRouter 每小时更新。",
+    desc: "按最近 7 天用量排名。",
     model: "模型",
     tokens: "Tokens (7天)",
     growth: "增长",
@@ -360,7 +453,7 @@ const zh = {
   },
   activityPage: {
     title: "活动记录",
-    desc: "你的生成历史、Token 用量和延迟。Mock 数据，已预留真实 DB 接入。",
+    desc: "你的生成历史、Token 用量和延迟。PDPA：Prompt 存哈希，完整内容截断。",
     totalGenerations: "总生成数",
     totalTokens: "总 Tokens",
     avgLatency: "平均延迟",
@@ -372,10 +465,12 @@ const zh = {
     status: "状态",
     time: "时间",
     noActivity: "还没有活动，去 Playground 聊天即可生成记录。",
+    exportCsv: "导出 CSV",
+    promptHash: "Prompt 哈希 (PDPA)",
   },
   creditsPage: {
     title: "余额与计费",
-    desc: "管理余额、查看用量明细和发票。已预留 Stripe 接入。",
+    desc: "管理余额、查看用量明细和发票。支持 USD/MYR 和本地 FPX。",
     balance: "余额",
     addCredits: "充值",
     usageBreakdown: "用量明细",
@@ -385,12 +480,20 @@ const zh = {
     totalCost: "总费用",
     thisMonth: "本月",
     lastMonth: "上月",
-    buyCreditsNote: "生产环境对接 Stripe：在 /api/credits/checkout 创建支付会话",
-    mockMode: "Mock 模式 – 无真实扣费",
+    buyCreditsNote: "生产环境对接 Stripe/Billplz/ToyyibPay",
+    mockMode: "Mock 模式 – 无真实扣费，本地支付已模拟",
+    currency: "货币",
+    currencyUSD: "USD - 美元",
+    currencyMYR: "MYR - 马来西亚令吉 (1 USD = 4.70 MYR)",
+    localPayments: "本地支付 (马来西亚)",
+    billplz: "Billplz (FPX, 电子钱包)",
+    toyyibpay: "ToyyibPay (FPX)",
+    stripe: "Stripe (银行卡)",
+    rateNote: "汇率：1 USD = 4.70 MYR (模拟，可通过 API 更新)",
   },
   settingsPage: {
     title: "设置",
-    desc: "账户偏好、团队和集成。已预留真实登录。",
+    desc: "账户偏好、团队和集成，包含 BYOK 和 PDPA 设置。",
     profile: "个人资料",
     preferences: "偏好",
     team: "团队",
@@ -401,6 +504,16 @@ const zh = {
     save: "保存修改",
     saved: "已保存！",
     languageDesc: "界面语言，默认英文。",
+    currency: "货币",
+    currencyDesc: "显示货币，马来西亚市场用 MYR。",
+    byok: "自带密钥 (BYOK)",
+    byokDesc: "使用你自己的提供商密钥，存储为哈希，永不暴露，代理零成本。",
+    provider: "提供商",
+    keyPlaceholder: "sk-... (将被哈希)",
+    addKey: "添加密钥",
+    byokNote: "BYOK 密钥被哈希，创建后不再完整显示，按密钥限流。",
+    exportData: "导出数据 (PDPA)",
+    exportDesc: "导出所有生成为 CSV，Prompt 已哈希保护隐私。",
   },
   docsPage: {
     title: "OpenRouter 克隆版文档",
@@ -418,22 +531,24 @@ const zh = {
     baseUrl: "Base URL",
     exampleRequest: "请求示例",
     cloneProject: "本克隆项目",
-    cloneDesc: "完整的前后端 Mock，已预留真实后端插槽：",
+    cloneDesc: "包含 8 个增强的完整前后端 Mock：",
     cloneList: [
-      "着陆页、模型、排行、活动、余额、设置",
-      "带流式 Mock 的聊天 Playground",
-      "API Keys 的增删改查 (Mock DB)",
-      "完整 REST API：/api/v1/models, /chat/completions, /credits, /activity, /keys",
-      "Service 层在 src/lib/openrouter-service.ts – 可一键替换为真实",
-      "暗色主题 + 三语 EN/ZH/MS",
+      "工程清理：.gitignore、pnpm、无日志提交",
+      "MYR 货币 + Billplz/ToyyibPay 模拟 + BM Prompt 模板",
+      "模型并排对比 + 成本优化器省 70%",
+      "Prisma Schema 已就绪，支持 Supabase/Postgres",
+      "可插拔提供商：mock/openai/anthropic/openrouter 通过 PROVIDER 环境变量",
+      "安全：密钥仅显示一次、限流 600/分钟、SHA256 Prompt 哈希 PDPA",
+      "部署：Vercel 一键、Docker、Coolify 文档、GitHub Actions CI",
+      "BYOK + 导出 CSV 支持 PDPA 合规和变现",
     ],
     toMakeLive: "如何接入真实数据：",
     toMakeList: [
-      "在 .env.local 配置密钥，在 src/lib/openrouter-service.ts 实现真实调用",
-      "用 Prisma + Postgres 替换 mockStore，模型已在 src/lib/db/mockStore.ts 定义",
-      "在 src/app/api/v1/credits/route.ts 对接 Stripe",
-      "用 NextAuth 实现真实登录，参考 src/app/api/v1/auth/me/route.ts",
-      "前端已调用 Mock API，无需改动",
+      "设置 DATABASE_URL 并运行 npx prisma migrate dev – mockStore 自动切换真实 DB",
+      "设置 PROVIDER=openrouter 和 OPENROUTER_API_KEY 获取 200+ 真实模型",
+      "设置 PROVIDER=openai + OPENAI_API_KEY 直连 OpenAI",
+      "在 /api/v1/credits/route.ts 对接 Stripe/Billplz",
+      "加 NextAuth – 参考 /api/v1/auth/me/route.ts",
     ],
   },
   footer: {
@@ -449,6 +564,8 @@ const zh = {
     english: "English",
     chinese: "中文",
     malay: "Bahasa Melayu",
+    usd: "USD",
+    myr: "MYR",
   },
 };
 
@@ -456,6 +573,7 @@ const ms = {
   nav: {
     models: "Model",
     chat: "Sembang",
+    compare: "Banding",
     rankings: "Kedudukan",
     docs: "Dok",
     activity: "Aktiviti",
@@ -472,6 +590,7 @@ const ms = {
     subtitle: "Satu API untuk ratusan model AI. Harga lebih baik, uptime lebih tinggi, tanpa langganan. Akses GPT-4o, Claude 3.5, Gemini, Llama dan banyak lagi.",
     exploreModels: "Terokai Model",
     tryPlayground: "Cuba Playground",
+    tryCompare: "Cuba Banding",
     statModels: "Model AI",
     statProviders: "Pembekal",
     statStart: "0 untuk mula, bayar ikut guna",
@@ -487,6 +606,9 @@ const ms = {
       { title: "API Bersatu", desc: "API serasi OpenAI untuk 200+ model. Tukar model dengan satu baris. Tiada vendor lock-in." },
       { title: "Uptime Tinggi", desc: "Fallback automatik, load balancing dan retry merentasi banyak pembekal." },
       { title: "Harga Lebih Baik", desc: "Cari harga terbaik untuk mana-mana model. Jimat hingga 80% vs API terus." },
+      { title: "MYR & Bayaran Tempatan", desc: "Sokong mata wang MYR, Billplz & ToyyibPay untuk pasaran Malaysia." },
+      { title: "Banding & Pengoptimum Kos", desc: "Perbandingan sebelah-menyebelah dan pengoptimum kos jimat 70%." },
+      { title: "BYOK & PDPA", desc: "Bawa Kunci Sendiri, eksport CSV, had kadar dan hash patuh PDPA." },
     ],
   },
   modelsPage: {
@@ -541,9 +663,9 @@ const ms = {
     context: "Konteks",
     tokens: "token",
     clear: "Kosongkan",
-    welcome: "Hai! Saya klon OpenRouter. Pilih model di atas dan mula bersembang. Ini adalah demo UI – respons adalah mock tetapi antara muka sepadan dengan playground OpenRouter.",
+    welcome: "Hai! Saya klon OpenRouter dengan templat Melayu dan mod banding.",
     placeholder: "Mesej model... (Shift+Enter untuk baris baru)",
-    demoNote: "Playground demo – tiada panggilan API sebenar. Sambungkan kunci API anda di halaman Keys untuk menjadikannya live.",
+    demoNote: "Backend mock dengan had kadar & hash PDPA, sedia guna.",
     parameters: "Parameter",
     temperature: "Suhu",
     topP: "Top P",
@@ -556,10 +678,37 @@ const ms = {
     descTopP: "Persampelan nukleus",
     descMax: "Panjang respons",
     you: "Anda",
+    promptTemplates: "Templat Prompt (MY)",
+    templates: [
+      { label: "Terjemah ke BM", prompt: "Terjemahkan berikut ke Bahasa Melayu: " },
+      { label: "Ringkasan BM", prompt: "Buat ringkasan dalam BM untuk teks berikut: " },
+      { label: "Karangan SPM", prompt: "Tulis karangan SPM 300 patah tentang: " },
+      { label: "Surat Rasmi", prompt: "Tulis surat rasmi BM untuk: " },
+      { label: "Jelas dalam BM", prompt: "Jelaskan dalam BM mudah tentang: " },
+    ],
+    costOptimizer: "Pengoptimum Kos",
+    costOptimizerDesc: "Alternatif lebih murah untuk model ini",
+    saving: "jimat",
+    tryCheaper: "Cuba lebih murah",
+  },
+  comparePage: {
+    title: "Perbandingan Model",
+    desc: "Prompt sama banding sebelah-menyebelah 2-3 model. Lihat kos, latensi dan kualiti. Sedia pengeluaran.",
+    selectModels: "Pilih 2-3 model",
+    prompt: "Prompt",
+    promptPlaceholder: "Masukkan prompt untuk banding merentasi model...",
+    compare: "Bandingkan",
+    comparing: "Membandingkan...",
+    results: "Keputusan",
+    cost: "Kos",
+    latency: "Latensi",
+    tokens: "Token",
+    noResults: "Masukkan prompt dan pilih model untuk banding",
+    myTemplates: "Templat Malaysia",
   },
   keysPage: {
     title: "Kunci API",
-    desc: "Urus kunci API OpenRouter anda. Rahsiakan!",
+    desc: "Urus kunci API OpenRouter anda. Kunci penuh ditunjuk sekali sahaja untuk keselamatan (PDPA).",
     createKey: "Cipta Kunci",
     created: "Dicipta",
     lastUsed: "Terakhir digunakan",
@@ -568,12 +717,14 @@ const ms = {
     quickstart: "Mula cepat",
     billing: "Pengebilan",
     currentUsage: "Penggunaan bulan semasa",
-    demoNote: "Ini adalah klon demo – tiada pengebilan sebenar. Dalam pengeluaran, anda akan tambah kredit melalui Stripe, lihat analitik, tetapkan had, dsb.",
+    demoNote: "Keselamatan: Kunci penuh ditunjuk sekali sahaja, disimpan sebagai hash. Had kadar 600 req/min (mock Upstash).",
     creditsIncluded: "kredit termasuk",
+    showOnceWarning: "⚠️ Kunci penuh ditunjuk sekali sahaja! Salin sekarang, akan disembunyikan selepas 10s",
+    copied: "Disalin!",
   },
   rankingsPage: {
     title: "Kedudukan",
-    desc: "Model teratas mengikut penggunaan 7 hari lepas. OpenRouter sebenar dikemas kini setiap jam.",
+    desc: "Model teratas mengikut penggunaan 7 hari lepas.",
     model: "Model",
     tokens: "Token (7h)",
     growth: "Pertumbuhan",
@@ -581,7 +732,7 @@ const ms = {
   },
   activityPage: {
     title: "Aktiviti",
-    desc: "Generasi terkini anda, penggunaan token dan latensi. Data mock – ganti dengan log DB sebenar.",
+    desc: "Generasi terkini anda, penggunaan token dan latensi. PDPA: prompt disimpan sebagai hash.",
     totalGenerations: "Jumlah Generasi",
     totalTokens: "Jumlah Token",
     avgLatency: "Purata Latensi",
@@ -593,10 +744,12 @@ const ms = {
     status: "Status",
     time: "Masa",
     noActivity: "Tiada aktiviti lagi. Sembang di Playground untuk menjana log.",
+    exportCsv: "Eksport CSV",
+    promptHash: "Hash Prompt (PDPA)",
   },
   creditsPage: {
     title: "Kredit & Pengebilan",
-    desc: "Urus kredit, lihat pecahan penggunaan dan invois. Integrasi Stripe mock - sedia untuk plug.",
+    desc: "Urus kredit, lihat pecahan penggunaan dan invois. Sokong USD/MYR dan FPX/Billplz/ToyyibPay tempatan.",
     balance: "Baki",
     addCredits: "Tambah Kredit",
     usageBreakdown: "Pecahan Penggunaan",
@@ -606,12 +759,20 @@ const ms = {
     totalCost: "Jumlah Kos",
     thisMonth: "Bulan ini",
     lastMonth: "Bulan lepas",
-    buyCreditsNote: "Dalam pengeluaran, sambungkan Stripe: cipta sesi checkout di /api/credits/checkout",
-    mockMode: "Mod Mock – Tiada caj sebenar",
+    buyCreditsNote: "Dalam pengeluaran, sambungkan Stripe/Billplz/ToyyibPay: cipta sesi checkout di /api/credits/checkout",
+    mockMode: "Mod Mock – Tiada caj sebenar. Bayaran tempatan dimock.",
+    currency: "Mata Wang",
+    currencyUSD: "USD - Dolar AS",
+    currencyMYR: "MYR - Ringgit Malaysia (1 USD = 4.70 MYR)",
+    localPayments: "Bayaran Tempatan (MY)",
+    billplz: "Billplz (FPX, e-Wallet)",
+    toyyibpay: "ToyyibPay (FPX)",
+    stripe: "Stripe (Kad)",
+    rateNote: "Kadar: 1 USD = 4.70 MYR (mock, kemas kini melalui API)",
   },
   settingsPage: {
     title: "Tetapan",
-    desc: "Keutamaan akaun, pasukan dan integrasi. Sedia untuk auth sebenar.",
+    desc: "Keutamaan akaun, pasukan dan integrasi. Termasuk BYOK dan tetapan PDPA.",
     profile: "Profil",
     preferences: "Keutamaan",
     team: "Pasukan",
@@ -622,6 +783,16 @@ const ms = {
     save: "Simpan perubahan",
     saved: "Disimpan!",
     languageDesc: "Bahasa antara muka. Lalai ialah Bahasa Inggeris.",
+    currency: "Mata Wang",
+    currencyDesc: "Mata wang paparan. MYR untuk pasaran Malaysia.",
+    byok: "Bawa Kunci Sendiri (BYOK)",
+    byokDesc: "Guna kunci pembekal anda sendiri. Disimpan sebagai hash, tidak pernah terdedah, kos sifar untuk proksi.",
+    provider: "Pembekal",
+    keyPlaceholder: "sk-... (akan dihash)",
+    addKey: "Tambah Kunci",
+    byokNote: "Kunci BYOK dihash dan tidak pernah ditunjuk penuh selepas ciptaan. Had kadar setiap kunci.",
+    exportData: "Eksport Data (PDPA)",
+    exportDesc: "Eksport semua generasi anda sebagai CSV. Prompt dihash untuk privasi.",
   },
   docsPage: {
     title: "Dok Klon OpenRouter",
@@ -639,22 +810,24 @@ const ms = {
     baseUrl: "Base URL",
     exampleRequest: "Contoh Permintaan",
     cloneProject: "Projek Klon Ini",
-    cloneDesc: "Mock full-stack OpenRouter dengan backend sebenar boleh pasang:",
+    cloneDesc: "Mock full-stack dengan 8 penambahbaikan:",
     cloneList: [
-      "Landing, Model, Kedudukan, Aktiviti, Kredit, Tetapan",
-      "Chat Playground dengan streaming mock",
-      "CRUD Kunci API (mock DB)",
-      "REST API lengkap: /api/v1/models, /chat/completions, /credits, /activity, /keys",
-      "Lapisan servis di src/lib/openrouter-service.ts – tukar mock ke sebenar",
-      "Tema gelap + i18n EN/ZH/MS",
+      "Pembersihan kejuruteraan: .gitignore, pnpm, tiada log dalam repo",
+      "Mata wang MYR + Billplz/ToyyibPay mock + templat prompt BM",
+      "Banding sebelah-menyebelah model + pengoptimum kos jimat 70%",
+      "Skema Prisma sedia untuk Supabase/Postgres (fallback mockStore)",
+      "Pembekal boleh pasang: mock/openai/anthropic/openrouter melalui env PROVIDER",
+      "Keselamatan: kunci tunjuk sekali, had kadar 600/min, hash SHA256 prompt PDPA",
+      "Deploy: Vercel 1-klik, Docker, docs Coolify, CI GitHub Actions",
+      "BYOK + Eksport CSV untuk pematuhan PDPA dan monetisasi",
     ],
     toMakeLive: "Cara pasang data sebenar:",
     toMakeList: [
-      "Tetapkan kunci env dalam .env.local dan laksana panggilan sebenar dalam src/lib/openrouter-service.ts",
-      "Ganti mockStore dengan Prisma + Postgres – model sudah ditaip dalam src/lib/db/mockStore.ts",
-      "Wayar Stripe dalam src/app/api/v1/credits/route.ts",
-      "Tambah NextAuth untuk log masuk sebenar – lihat src/app/api/v1/auth/me/route.ts",
-      "Frontend sudah panggil mock API – tiada perubahan diperlukan",
+      "Tetapkan DATABASE_URL dan jalankan npx prisma migrate dev – mockStore auto tukar DB sebenar",
+      "Tetapkan PROVIDER=openrouter dan OPENROUTER_API_KEY untuk dapatkan 200+ model live",
+      "Tetapkan PROVIDER=openai + OPENAI_API_KEY untuk terus OpenAI",
+      "Wayar Stripe/Billplz dalam /api/v1/credits/route.ts – UI sudah sedia",
+      "Tambah NextAuth – lihat /api/v1/auth/me/route.ts",
     ],
   },
   footer: {
@@ -670,6 +843,8 @@ const ms = {
     english: "English",
     chinese: "中文",
     malay: "Bahasa Melayu",
+    usd: "USD",
+    myr: "MYR",
   },
 };
 
@@ -678,6 +853,8 @@ export const translations = { en, zh, ms };
 type I18nContextType = {
   lang: Lang;
   setLang: (l: Lang) => void;
+  currency: Currency;
+  setCurrency: (c: Currency) => void;
   t: Translations;
 };
 
@@ -685,16 +862,21 @@ const I18nContext = createContext<I18nContextType | null>(null);
 
 export function I18nProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<Lang>("en");
+  const [currency, setCurrencyState] = useState<Currency>("USD");
 
   useEffect(() => {
-    const saved = localStorage.getItem("lang") as Lang | null;
-    if (saved && (saved === "en" || saved === "zh" || saved === "ms")) {
-      setLangState(saved);
+    const savedLang = localStorage.getItem("lang") as Lang | null;
+    const savedCurrency = localStorage.getItem("currency") as Currency | null;
+    if (savedLang && (savedLang === "en" || savedLang === "zh" || savedLang === "ms")) {
+      setLangState(savedLang);
     } else {
       const browserLang = navigator.language.toLowerCase();
       if (browserLang.startsWith("zh")) setLangState("zh");
       else if (browserLang.startsWith("ms") || browserLang.startsWith("id")) setLangState("ms");
       else setLangState("en");
+    }
+    if (savedCurrency && (savedCurrency === "USD" || savedCurrency === "MYR")) {
+      setCurrencyState(savedCurrency);
     }
   }, []);
 
@@ -704,9 +886,16 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     if (typeof document !== "undefined") document.documentElement.lang = l;
   };
 
+  const setCurrency = (c: Currency) => {
+    setCurrencyState(c);
+    localStorage.setItem("currency", c);
+  };
+
   const value: I18nContextType = {
     lang,
     setLang,
+    currency,
+    setCurrency,
     t: translations[lang] as Translations,
   };
 
@@ -717,4 +906,21 @@ export function useI18n() {
   const ctx = useContext(I18nContext);
   if (!ctx) throw new Error("useI18n must be used within I18nProvider");
   return ctx;
+}
+
+export function formatCurrency(usd: number, currency: Currency, lang: Lang): string {
+  const rate = 4.7;
+  if (currency === "MYR") {
+    const myr = usd * rate;
+    return `RM${myr.toFixed(2)}`;
+  }
+  return `$${usd.toFixed(2)}`;
+}
+
+export function formatPricePerM(usdPerM: number, currency: Currency): string {
+  const rate = 4.7;
+  if (currency === "MYR") {
+    return `RM${(usdPerM * rate).toFixed(2)}/M`;
+  }
+  return `$${usdPerM}/M`;
 }

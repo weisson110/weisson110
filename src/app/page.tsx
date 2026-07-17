@@ -3,7 +3,7 @@ import { useState } from "react";
 import { models } from "@/lib/models";
 import ModelCard from "@/components/ModelCard";
 import Link from "next/link";
-import { ArrowRight, Zap, Shield, Code2, Globe, Layers, Cpu } from "lucide-react";
+import { ArrowRight, Zap, Shield, Code2, Globe, Layers, Cpu, DollarSign, Key, BarChart3, Coins } from "lucide-react";
 import { useI18n } from "@/components/I18nProvider";
 
 export default function HomePage() {
@@ -54,6 +54,13 @@ export default function HomePage() {
               >
                 <Code2 className="h-4 w-4" />
                 {t.home.tryPlayground}
+              </Link>
+              <Link
+                href="/compare"
+                className="inline-flex h-[40px] items-center gap-2 rounded-md border border-zinc-800 bg-zinc-900/80 px-5 text-[14px] font-medium text-white backdrop-blur transition hover:bg-zinc-800"
+              >
+                <BarChart3 className="h-4 w-4" />
+                {t.home.tryCompare || "Compare"}
               </Link>
             </div>
 
@@ -165,10 +172,10 @@ console.log(completion.choices[0].message)`}</code>
       <div className="border-t border-zinc-900 bg-zinc-950/50">
         <div className="mx-auto max-w-[1440px] px-4 py-20 sm:px-6 lg:px-8">
           <div className="grid gap-6 md:grid-cols-3">
-            {t.home.features.map((f, idx) => {
-              const icons = [Cpu, Shield, Globe];
-              const Icon = icons[idx];
-              const colors = ["text-violet-400", "text-emerald-400", "text-blue-400"];
+            {t.home.features.map((f: any, idx: number) => {
+              const icons = [Cpu, Shield, DollarSign, Coins, BarChart3, Key];
+              const Icon = icons[idx] || Cpu;
+              const colors = ["text-violet-400", "text-emerald-400", "text-blue-400", "text-amber-400", "text-pink-400", "text-cyan-400"];
               return (
                 <div key={f.title} className="rounded-xl border border-zinc-800 bg-zinc-900/30 p-6">
                   <Icon className={`h-5 w-5 ${colors[idx]}`} />

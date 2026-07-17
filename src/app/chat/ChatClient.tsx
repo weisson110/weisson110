@@ -1,11 +1,11 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import { models } from "@/lib/models";
-import { Send, Settings2, Copy, Trash2, Bot, User } from "lucide-react";
+import { Send, Settings2, Copy, Trash2, Bot, User, Sparkles, Coins } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { useI18n } from "@/components/I18nProvider";
+import { useI18n, formatCurrency } from "@/components/I18nProvider";
 
-type Message = { role: "user" | "assistant"; content: string };
+type Message = { role: "user" | "assistant"; content: string; cost?: number; model?: string };
 
 export default function ChatClient() {
   const searchParams = useSearchParams();
@@ -14,8 +14,9 @@ export default function ChatClient() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [cheaperAlts, setCheaperAlts] = useState<any[]>([]);
   const bottomRef = useRef<HTMLDivElement>(null);
-  const { t } = useI18n();
+  const { t, currency } = useI18n();
 
   useEffect(() => {
     setMessages([{ role: "assistant", content: t.chat.welcome }]);
@@ -25,6 +26,22 @@ export default function ChatClient() {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // Fetch cheaper alternatives when model changes
+  useEffect(() => {
+    fetch(`/api/v1/models`).then(()=>{});
+    // Mock cheaper alts logic
+    const current = models.find(m=>m.id===selectedModel);
+    if(current){
+      const alts = models.filter(m=>m.pricing.input < current.pricing.input).sort((a,b)=>a.pricing.input-b.pricing.input).slice(0,2).map(m=>({
+        id: m.id,
+        name: m.name,
+        saving: Math.round((1 - m.pricing.input/current.pricing.input)*100),
+        price: m.pricing.input,
+      }));
+      setCheaperAlts(alts);
+    }
+  }, [selectedModel]);
+
   const send = async () => {
     if (!input.trim()) return;
     const userMsg: Message = { role: "user", content: input };
@@ -32,12 +49,24 @@ export default function ChatClient() {
     setInput("");
     setLoading(true);
 
-    setTimeout(() => {
-      const model = models.find((x) => x.id === selectedModel);
-      const reply = `This is a simulated response from **${model?.name || selectedModel}**.\n\nYou said: "${userMsg.content}"\n\nIn real OpenRouter, this would route to ${model?.provider}'s API with your API key, handle fallbacks, streaming, caching, etc.\n\nFeatures demonstrated:\n- OpenAI-compatible chat endpoint\n- Model routing (${model?.id})\n- Token counting\n- Streaming support\n\nTry selecting a different model above!`;
-      setMessages((m) => [...m, { role: "assistant", content: reply }]);
-      setLoading(false);
-    }, 800 + Math.random() * 600);
+    try {
+      const res = await fetch("/api/v1/chat/completions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ model: selectedModel, messages: [...messages, userMsg].map(m=>({ role: m.role, content: m.content })) }),
+      });
+      const data = await res.json();
+      const assistantMsg: Message = {
+        role: "assistant",
+        content: data.choices?.[0]?.message?.content || "No response",
+        cost: (data.usage?.total_tokens || 200) * 0.00001,
+        model: selectedModel,
+      };
+      setMessages((m) => [...m, assistantMsg]);
+    } catch {
+      setMessages((m) => [...m, { role: "assistant", content: "Error generating response" }]);
+    }
+    setLoading(false);
   };
 
   return (
@@ -53,7 +82,7 @@ export default function ChatClient() {
         >
           {models.map((m) => (
             <option key={m.id} value={m.id}>
-              {m.provider} / {m.name}
+              {m.provider} / {m.name} (${m.pricing.input}/M)
             </option>
           ))}
         </select>
@@ -83,10 +112,11 @@ export default function ChatClient() {
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
-                      <span className="text-[13px] font-semibold text-white">{m.role === "user" ? t.chat.you : models.find((x) => x.id === selectedModel)?.name || "Assistant"}</span>
+                      <span className="text-[13px] font-semibold text-white">{m.role === "user" ? t.chat.you : models.find((x) => x.id === (m.model || selectedModel))?.name || "Assistant"}</span>
                       {m.role === "assistant" && (
-                        <span className="rounded bg-zinc-800 px-1.5 py-0.5 text-[10px] text-zinc-400">{selectedModel}</span>
+                        <span className="rounded bg-zinc-800 px-1.5 py-0.5 text-[10px] text-zinc-400">{m.model || selectedModel}</span>
                       )}
+                      {m.cost && <span className="text-[10px] text-zinc-500">{formatCurrency(m.cost, currency as any, "en" as any)}</span>}
                     </div>
                     <div className="prose prose-invert mt-2 max-w-none">
                       <p className="whitespace-pre-wrap text-[13.5px] leading-relaxed text-zinc-300">{m.content}</p>
@@ -119,6 +149,16 @@ export default function ChatClient() {
 
           <div className="border-t border-zinc-800 bg-zinc-950 p-4">
             <div className="mx-auto max-w-3xl">
+              {(t.chat.templates as any[])?.length > 0 && (
+                <div className="mb-3 flex flex-wrap gap-1.5">
+                  <span className="flex items-center gap-1 text-[11px] text-zinc-500"><Sparkles className="h-3 w-3" /> {t.chat.promptTemplates}:</span>
+                  {(t.chat.templates as any[]).map((tpl: any) => (
+                    <button key={tpl.label} onClick={() => setInput(tpl.prompt)} className="rounded-full border border-zinc-800 bg-zinc-900 px-2.5 py-1 text-[11px] text-zinc-400 hover:bg-zinc-800 hover:text-white">
+                      {tpl.label}
+                    </button>
+                  ))}
+                </div>
+              )}
               <div className="flex items-end gap-2 rounded-xl border border-zinc-800 bg-zinc-900 p-2 focus-within:border-zinc-700">
                 <textarea
                   value={input}
@@ -148,7 +188,7 @@ export default function ChatClient() {
           </div>
         </div>
 
-        <div className="hidden w-[300px] shrink-0 border-l border-zinc-800 bg-zinc-950/50 p-4 lg:block">
+        <div className="hidden w-[320px] shrink-0 border-l border-zinc-800 bg-zinc-950/50 p-4 lg:block overflow-y-auto">
           <h3 className="text-[12px] font-semibold uppercase tracking-wider text-zinc-500">{t.chat.parameters}</h3>
           <div className="mt-4 space-y-5">
             {[
@@ -165,10 +205,31 @@ export default function ChatClient() {
                 <p className="mt-1 text-[11px] text-zinc-600">{p.desc}</p>
               </div>
             ))}
+
+            <div className="rounded-lg border border-amber-900/30 bg-amber-950/20 p-3">
+              <div className="flex items-center gap-1.5 text-[11px] font-medium text-amber-200"><Coins className="h-3.5 w-3.5" /> {t.chat.costOptimizer}</div>
+              <p className="mt-1 text-[11px] text-amber-200/60">{t.chat.costOptimizerDesc}</p>
+              <div className="mt-3 space-y-2">
+                {cheaperAlts.map((alt) => (
+                  <button key={alt.id} onClick={() => setSelectedModel(alt.id)} className="flex w-full items-center justify-between rounded-md border border-amber-800/30 bg-zinc-900 px-2.5 py-2 text-left hover:bg-zinc-800">
+                    <div>
+                      <div className="text-[11px] text-white">{alt.name}</div>
+                      <div className="text-[10px] text-zinc-500">{formatCurrency(alt.price, currency as any, "en" as any)}/M</div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-[11px] font-medium text-emerald-400">{alt.saving}% {t.chat.saving}</div>
+                      <div className="text-[10px] text-zinc-500">{t.chat.tryCheaper}</div>
+                    </div>
+                  </button>
+                ))}
+                {cheaperAlts.length === 0 && <div className="text-[11px] text-zinc-500">Already cheapest model</div>}
+              </div>
+            </div>
+
             <div className="rounded-lg border border-zinc-800 bg-zinc-900/50 p-3">
               <div className="text-[11px] font-medium text-white">{t.chat.estimatedCost}</div>
               <div className="mt-1 flex items-baseline gap-2">
-                <span className="text-[18px] font-semibold text-white">$0.0023</span>
+                <span className="text-[18px] font-semibold text-white">{formatCurrency(0.0023, currency as any, "en" as any)}</span>
                 <span className="text-[11px] text-zinc-500">{t.chat.thisChat}</span>
               </div>
               <div className="mt-2 h-1 w-full rounded-full bg-zinc-800">

@@ -1,15 +1,46 @@
 "use client";
-import { useState } from "react";
-import { Key, Copy, Eye, EyeOff, Trash2, Plus } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Key, Copy, Eye, EyeOff, Trash2, Plus, AlertTriangle } from "lucide-react";
 import { useI18n } from "@/components/I18nProvider";
+
+type ApiKey = {
+  id: string;
+  name: string;
+  key: string;
+  createdAt: string;
+  lastUsedAt: string | null;
+  usageUsd: number;
+};
 
 export default function KeysPage() {
   const [showKey, setShowKey] = useState<string | null>(null);
+  const [newlyCreated, setNewlyCreated] = useState<ApiKey | null>(null);
   const { t } = useI18n();
-  const [keys, setKeys] = useState([
-    { id: "or-123", name: "Production", key: "sk-or-v1-abc123def456ghi789jkl012mno345pqr678stu901vwx234", created: "2024-09-12", lastUsed: "2 hours ago", usage: "$12.34" },
-    { id: "or-124", name: "Development", key: "sk-or-v1-xyz987wvu654tsr321qpo098nml765kji432hgf109edc876", created: "2024-10-01", lastUsed: "Never", usage: "$0.00" },
-  ]);
+  const [keys, setKeys] = useState<ApiKey[]>([]);
+
+  useEffect(() => {
+    fetch("/api/v1/keys").then(r=>r.json()).then(d=>{
+      // Map to display format
+      setKeys(d.data.map((k:any)=>({
+        id: k.id,
+        name: k.name,
+        key: k.key || `${k.keyPrefix}••••••••••••••${(k.key||'').slice(-4)}`,
+        createdAt: k.createdAt,
+        lastUsedAt: k.lastUsedAt,
+        usageUsd: k.usageUsd,
+      })));
+    });
+  }, []);
+
+  const createKey = async () => {
+    const res = await fetch("/api/v1/keys", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: `Key ${keys.length+1}` }) });
+    const data = await res.json();
+    const fullKey = data.data.key || data.data.fullKey;
+    // Show once modal
+    setNewlyCreated({ id: data.data.id, name: data.data.name, key: fullKey, createdAt: data.data.createdAt, lastUsedAt: null, usageUsd: 0 });
+    // Add masked to list
+    setKeys([{ id: data.data.id, name: data.data.name, key: `${fullKey.slice(0,12)}••••••••••••••${fullKey.slice(-4)}`, createdAt: data.data.createdAt, lastUsedAt: null, usageUsd: 0 }, ...keys]);
+  };
 
   return (
     <div className="mx-auto max-w-[1000px] px-4 py-8 sm:px-6">
@@ -18,16 +49,21 @@ export default function KeysPage() {
           <h1 className="text-[24px] font-semibold text-white">{t.keysPage.title}</h1>
           <p className="mt-1 text-[13px] text-zinc-400">{t.keysPage.desc}</p>
         </div>
-        <button
-          onClick={() => {
-            const newKey = { id: `or-${Date.now()}`, name: `Key ${keys.length + 1}`, key: `sk-or-v1-${Math.random().toString(36).slice(2)}${Math.random().toString(36).slice(2)}`, created: new Date().toISOString().slice(0, 10), lastUsed: "Never", usage: "$0.00" };
-            setKeys([newKey, ...keys]);
-          }}
-          className="inline-flex items-center gap-1.5 rounded-md bg-white px-3 py-2 text-[13px] font-semibold text-black hover:bg-zinc-200"
-        >
+        <button onClick={createKey} className="inline-flex items-center gap-1.5 rounded-md bg-white px-3 py-2 text-[13px] font-semibold text-black hover:bg-zinc-200">
           <Plus className="h-4 w-4" /> {t.keysPage.createKey}
         </button>
       </div>
+
+      {newlyCreated && (
+        <div className="mt-6 rounded-xl border border-amber-800/50 bg-amber-950/20 p-4">
+          <div className="flex items-center gap-2 text-amber-200"><AlertTriangle className="h-4 w-4" /><span className="text-[13px] font-medium">{t.keysPage.showOnceWarning}</span></div>
+          <code className="mt-2 block rounded bg-zinc-950 p-3 font-mono text-[13px] text-white break-all">{newlyCreated.key}</code>
+          <div className="mt-2 flex gap-2">
+            <button onClick={()=>{ navigator.clipboard.writeText(newlyCreated.key); }} className="rounded-md bg-white px-3 py-1.5 text-[12px] font-medium text-black">{t.keysPage.copied}</button>
+            <button onClick={()=>setNewlyCreated(null)} className="rounded-md border border-zinc-700 bg-zinc-900 px-3 py-1.5 text-[12px] text-zinc-300">Close, I copied</button>
+          </div>
+        </div>
+      )}
 
       <div className="mt-8 overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/30">
         <div className="divide-y divide-zinc-800">
@@ -52,9 +88,9 @@ export default function KeysPage() {
                     </button>
                   </div>
                   <div className="mt-1.5 flex gap-3 text-[11px] text-zinc-500">
-                    <span>{t.keysPage.created} {k.created}</span>
-                    <span>• {t.keysPage.lastUsed} {k.lastUsed}</span>
-                    <span>• {k.usage} {t.keysPage.used}</span>
+                    <span>{t.keysPage.created} {new Date(k.createdAt).toLocaleDateString()}</span>
+                    <span>• {t.keysPage.lastUsed} {k.lastUsedAt ? new Date(k.lastUsedAt).toLocaleString() : "Never"}</span>
+                    <span>• ${k.usageUsd.toFixed(2)} {t.keysPage.used}</span>
                   </div>
                 </div>
               </div>
@@ -62,7 +98,10 @@ export default function KeysPage() {
                 <button className="rounded-md border border-zinc-800 bg-zinc-900 px-3 py-1.5 text-[12px] text-zinc-400 hover:bg-zinc-800 hover:text-white">
                   {t.keysPage.edit}
                 </button>
-                <button onClick={() => setKeys(keys.filter((x) => x.id !== k.id))} className="rounded-md border border-red-900/50 bg-red-950/30 px-3 py-1.5 text-[12px] text-red-400 hover:bg-red-950/50">
+                <button onClick={async()=>{
+                  await fetch(`/api/v1/keys/${k.id}`, { method: "DELETE" });
+                  setKeys(keys.filter((x) => x.id !== k.id));
+                }} className="rounded-md border border-red-900/50 bg-red-950/30 px-3 py-1.5 text-[12px] text-red-400 hover:bg-red-950/50">
                   <Trash2 className="h-3.5 w-3.5" />
                 </button>
               </div>

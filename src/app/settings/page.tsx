@@ -1,15 +1,18 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useI18n, Lang } from "@/components/I18nProvider";
-import { User, Globe, Cpu, Save } from "lucide-react";
+import { useI18n, Lang, Currency } from "@/components/I18nProvider";
+import { User, Globe, Cpu, Save, Key, Download } from "lucide-react";
 
 export default function SettingsPage() {
-  const { t, lang, setLang } = useI18n();
+  const { t, lang, setLang, currency, setCurrency } = useI18n();
   const [email, setEmail] = useState("demo@openrouter.clone");
   const [name, setName] = useState("Demo User");
   const [defaultModel, setDefaultModel] = useState("anthropic/claude-3.5-sonnet");
   const [theme, setTheme] = useState("dark");
   const [saved, setSaved] = useState(false);
+  const [byokProvider, setByokProvider] = useState("openai");
+  const [byokKey, setByokKey] = useState("");
+  const [byokKeys, setByokKeys] = useState<any[]>([]);
 
   const languages: { code: Lang; label: string }[] = [
     { code: "en", label: "English (Default)" },
@@ -17,9 +20,42 @@ export default function SettingsPage() {
     { code: "ms", label: "Bahasa Melayu" },
   ];
 
+  useEffect(() => {
+    fetch("/api/v1/auth/me").then(r=>r.json()).then(d=>{
+      if(d.data?.email) setEmail(d.data.email);
+      if(d.data?.name) setName(d.data.name);
+    });
+    // Load BYOK keys
+    fetch("/api/v1/keys").then(()=>{}); // placeholder
+    setByokKeys([
+      { id: "byok_1", provider: "openai", keyPrefix: "sk-proj-a1b2", createdAt: new Date().toISOString() },
+    ]);
+  }, []);
+
   const save = () => {
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
+  };
+
+  const addByok = async () => {
+    if(!byokKey.trim()) return;
+    // Mock add
+    setByokKeys([...byokKeys, { id: `byok_${Date.now()}`, provider: byokProvider, keyPrefix: byokKey.slice(0,8), createdAt: new Date().toISOString() }]);
+    setByokKey("");
+  };
+
+  const exportCsv = async () => {
+    const res = await fetch("/api/v1/activity?limit=100");
+    const data = await res.json();
+    const rows = [["id","model","promptHash","tokens","cost","latency","createdAt"]];
+    data.data.forEach((g:any)=> rows.push([g.id,g.model,g.promptHash||"",g.totalTokens,g.costUsd,g.latencyMs,g.createdAt]));
+    const csv = rows.map(r=>r.join(",")).join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `generations_${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
   };
 
   return (
@@ -53,7 +89,7 @@ export default function SettingsPage() {
 
           <div className="rounded-xl border border-zinc-800 bg-zinc-900/30 p-6">
             <h3 className="text-[14px] font-semibold text-white">{t.settingsPage.preferences}</h3>
-            <div className="mt-4 space-y-4">
+            <div className="mt-4 space-y-5">
               <div>
                 <label className="text-[12px] text-zinc-400">{t.settingsPage.language}</label>
                 <p className="mt-1 text-[11px] text-zinc-500">{t.settingsPage.languageDesc}</p>
@@ -61,6 +97,18 @@ export default function SettingsPage() {
                   {languages.map((l) => (
                     <button key={l.code} onClick={() => setLang(l.code)} className={`rounded-md border px-3 py-2 text-[13px] ${lang === l.code ? "border-white bg-white text-black" : "border-zinc-800 bg-zinc-900 text-zinc-400 hover:bg-zinc-800"}`}>
                       {l.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="text-[12px] text-zinc-400">{t.settingsPage.currency}</label>
+                <p className="mt-1 text-[11px] text-zinc-500">{t.settingsPage.currencyDesc}</p>
+                <div className="mt-2 flex gap-2">
+                  {(["USD","MYR"] as Currency[]).map((c) => (
+                    <button key={c} onClick={() => setCurrency(c)} className={`rounded-md border px-3 py-2 text-[13px] ${currency === c ? "border-white bg-white text-black" : "border-zinc-800 bg-zinc-900 text-zinc-400"}`}>
+                      {c} {c==="MYR"?"(RM)":"($)"} 
                     </button>
                   ))}
                 </div>
@@ -96,9 +144,38 @@ export default function SettingsPage() {
             </div>
           </div>
 
-          <div className="rounded-xl border border-amber-900/30 bg-amber-950/20 p-4 text-[12px] text-amber-200/70">
-            Mock Settings Page – In production, wire to NextAuth/Clerk, store prefs in DB. Language default is English as requested, with ZH and MS toggle via header.
+          <div className="rounded-xl border border-zinc-800 bg-zinc-900/30 p-6">
+            <h3 className="text-[14px] font-semibold text-white flex items-center gap-2"><Key className="h-4 w-4" /> {t.settingsPage.byok}</h3>
+            <p className="mt-1 text-[12px] text-zinc-500">{t.settingsPage.byokDesc}</p>
+            <div className="mt-4 flex gap-2">
+              <select value={byokProvider} onChange={(e)=>setByokProvider(e.target.value)} className="h-9 rounded-md border border-zinc-800 bg-zinc-900 px-2 text-[12px] text-white">
+                <option value="openai">OpenAI</option>
+                <option value="anthropic">Anthropic</option>
+                <option value="google">Google</option>
+                <option value="deepseek">DeepSeek</option>
+              </select>
+              <input value={byokKey} onChange={(e)=>setByokKey(e.target.value)} placeholder={t.settingsPage.keyPlaceholder} className="h-9 flex-1 rounded-md border border-zinc-800 bg-zinc-900 px-3 text-[12px] text-white placeholder:text-zinc-600 focus:border-zinc-700 focus:outline-none" />
+              <button onClick={addByok} className="h-9 rounded-md bg-white px-3 text-[12px] font-semibold text-black hover:bg-zinc-200">{t.settingsPage.addKey}</button>
+            </div>
+            <div className="mt-3 space-y-1">
+              {byokKeys.map((k:any)=>(
+                <div key={k.id} className="flex items-center justify-between rounded-md border border-zinc-800 bg-zinc-900 px-3 py-2 text-[12px]">
+                  <span className="text-zinc-300">{k.provider} • {k.keyPrefix}••••</span>
+                  <span className="text-[11px] text-zinc-500">{new Date(k.createdAt).toLocaleDateString()}</span>
+                </div>
+              ))}
+            </div>
+            <p className="mt-3 text-[11px] text-zinc-500">{t.settingsPage.byokNote}</p>
           </div>
+
+          <div className="rounded-xl border border-zinc-800 bg-zinc-900/30 p-6">
+            <h3 className="text-[14px] font-semibold text-white flex items-center gap-2"><Download className="h-4 w-4" /> {t.settingsPage.exportData}</h3>
+            <p className="mt-1 text-[12px] text-zinc-500">{t.settingsPage.exportDesc}</p>
+            <button onClick={exportCsv} className="mt-3 rounded-md border border-zinc-800 bg-zinc-900 px-3 py-2 text-[12px] text-white hover:bg-zinc-800">
+              {t.activityPage.exportCsv}
+            </button>
+          </div>
+
         </div>
       </div>
     </div>

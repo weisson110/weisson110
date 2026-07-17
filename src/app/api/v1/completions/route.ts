@@ -23,7 +23,7 @@ export async function POST(req: Request) {
       object: "text_completion",
       created: result.created,
       model: result.model,
-      choices: result.choices.map(c => ({
+      choices: result.choices.map((c: any) => ({
         text: c.message.content,
         index: c.index,
         finish_reason: c.finish_reason,

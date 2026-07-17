@@ -1,0 +1,93 @@
+// Prisma schema - ready for Supabase / Postgres
+// This is task 4: Real DB structure, but still uses mockStore if DATABASE_URL not set
+// To use real DB: set DATABASE_URL in .env.local and run npx prisma migrate dev
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  name          String?
+  avatarUrl     String?
+  creditsUsd    Float    @default(0)
+  totalUsageUsd Float    @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  apiKeys       ApiKey[]
+  generations   Generation[]
+  creditTxns    CreditTransaction[]
+  byokKeys      ByokKey[]
+}
+
+model ApiKey {
+  id                 String    @id @default(cuid())
+  name               String
+  keyHash            String    @unique // store hash, not plain key (PDPA compliance)
+  keyPrefix          String // first 12 chars for display
+  createdAt          DateTime  @default(now())
+  lastUsedAt         DateTime?
+  usageUsd           Float     @default(0)
+  requestsPerMinute  Int       @default(200)
+  tokensPerMinute    Int       @default(50000)
+  isActive           Boolean   @default(true)
+  userId             String
+  user               User      @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+
+model Generation {
+  id               String   @id @default(cuid())
+  model            String
+  provider         String
+  prompt           String? // encrypted or truncated for PDPA, see promptHash
+  promptHash       String // SHA-256 hash for deduplication / privacy
+  completion       String?
+  promptTokens     Int
+  completionTokens Int
+  totalTokens      Int
+  latencyMs        Int
+  costUsd          Float
+  status           String   @default("completed") // completed, failed, cached
+  isStreaming      Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  userId           String?
+  user             User?    @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([model])
+  @@index([createdAt])
+}
+
+model CreditTransaction {
+  id          String   @id @default(cuid())
+  type        String // purchase, usage, refund
+  amountUsd   Float
+  description String
+  createdAt   DateTime @default(now())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+
+model ByokKey {
+  id         String   @id @default(cuid())
+  provider   String // openai, anthropic, google
+  keyHash    String // encrypted
+  keyPrefix  String
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+
+  @@unique([userId, provider])
+}
