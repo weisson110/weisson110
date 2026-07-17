@@ -1,36 +1,40 @@
+"use client";
+import { useI18n } from "@/components/I18nProvider";
+
 export default function DocsPage() {
+  const { t } = useI18n();
   return (
     <div className="mx-auto max-w-[1000px] px-4 py-8 sm:px-6">
-      <h1 className="text-[28px] font-semibold text-white">OpenRouter Clone Docs</h1>
-      <p className="mt-2 text-[14px] text-zinc-400">Drop-in OpenAI-compatible API for all models.</p>
+      <h1 className="text-[28px] font-semibold text-white">{t.docsPage.title}</h1>
+      <p className="mt-2 text-[14px] text-zinc-400">{t.docsPage.subtitle}</p>
 
       <div className="mt-8 grid gap-8 lg:grid-cols-[200px_1fr]">
         <div className="space-y-6 text-[13px]">
           <div>
-            <div className="font-semibold text-white">Getting Started</div>
+            <div className="font-semibold text-white">{t.docsPage.gettingStarted}</div>
             <ul className="mt-2 space-y-1.5 text-zinc-400">
-              <li className="text-white">Quickstart</li>
-              <li>Authentication</li>
-              <li>Models</li>
-              <li>Streaming</li>
+              <li className="text-white">{t.docsPage.quickstart}</li>
+              <li>{t.docsPage.authentication}</li>
+              <li>{t.docsPage.models}</li>
+              <li>{t.docsPage.streaming}</li>
             </ul>
           </div>
           <div>
-            <div className="font-semibold text-white">Features</div>
+            <div className="font-semibold text-white">{t.docsPage.features}</div>
             <ul className="mt-2 space-y-1.5 text-zinc-400">
-              <li>Routing & Fallbacks</li>
-              <li>Provider Sorting</li>
-              <li>Function Calling</li>
-              <li>Vision</li>
+              <li>{t.docsPage.routing}</li>
+              <li>{t.docsPage.sorting}</li>
+              <li>{t.docsPage.functionCalling}</li>
+              <li>{t.docsPage.vision}</li>
             </ul>
           </div>
         </div>
 
         <div className="prose prose-invert max-w-none">
           <div className="rounded-xl border border-zinc-800 bg-zinc-900/30 p-6">
-            <h2 className="text-[18px] font-semibold text-white">Base URL</h2>
+            <h2 className="text-[18px] font-semibold text-white">{t.docsPage.baseUrl}</h2>
             <code className="mt-2 block rounded bg-zinc-950 p-3 text-sm">https://openrouter.ai/api/v1</code>
-            <h3 className="mt-6 text-[15px] font-semibold text-white">Example Request</h3>
+            <h3 className="mt-6 text-[15px] font-semibold text-white">{t.docsPage.exampleRequest}</h3>
             <pre className="mt-3 overflow-x-auto rounded-lg bg-zinc-950 p-4 text-[12px] text-zinc-300">{`// npm i openai
 import OpenAI from "openai";
 
@@ -46,32 +50,23 @@ const openai = new OpenAI({
 const completion = await openai.chat.completions.create({
   model: "anthropic/claude-3.5-sonnet",
   messages: [{ role: "user", content: "Hi" }],
-  // Optional OpenRouter params
-  // models: ["anthropic/claude-3.5-sonnet", "openai/gpt-4o"],
-  // route: "fallback",
 });
 
 console.log(completion.choices[0].message.content);`}</pre>
 
-            <h3 className="mt-8 text-[15px] font-semibold text-white">This Clone Project</h3>
+            <h3 className="mt-8 text-[15px] font-semibold text-white">{t.docsPage.cloneProject}</h3>
             <div className="mt-3 space-y-2 text-[13px] text-zinc-400">
-              <p>This is a high-fidelity clone built with Next.js 14 + Tailwind. It includes:</p>
+              <p>{t.docsPage.cloneDesc}</p>
               <ul className="list-disc pl-5">
-                <li>Landing page with hero, code demo, stats</li>
-                <li>Models listing with search, filters, sorting</li>
-                <li>Model detail with providers & code snippet</li>
-                <li>Chat playground (mocked streaming)</li>
-                <li>API Keys management UI</li>
-                <li>Rankings page</li>
-                <li>Dark theme matching openrouter.ai</li>
+                {t.docsPage.cloneList.map((item: string) => (
+                  <li key={item}>{item}</li>
+                ))}
               </ul>
-              <p className="mt-4">To make it fully functional:</p>
+              <p className="mt-4">{t.docsPage.toMakeLive}</p>
               <ol className="list-decimal pl-5">
-                <li>Add backend route <code>/api/chat/completions</code> that proxies to OpenRouter or directly to providers</li>
-                <li>Store API keys in database (Prisma + Postgres)</li>
-                <li>Add auth via NextAuth / Clerk</li>
-                <li>Implement real billing via Stripe</li>
-                <li>Connect to OpenRouter API to fetch live models list: <code>GET https://openrouter.ai/api/v1/models</code></li>
+                {t.docsPage.toMakeList.map((item: string) => (
+                  <li key={item}>{item}</li>
+                ))}
               </ol>
             </div>
           </div>

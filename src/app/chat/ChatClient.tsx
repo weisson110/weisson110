@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from "react";
 import { models } from "@/lib/models";
 import { Send, Settings2, Copy, Trash2, Bot, User } from "lucide-react";
 import { useSearchParams } from "next/navigation";
+import { useI18n } from "@/components/I18nProvider";
 
 type Message = { role: "user" | "assistant"; content: string };
 
@@ -10,12 +11,15 @@ export default function ChatClient() {
   const searchParams = useSearchParams();
   const initialModel = searchParams.get("model") ? decodeURIComponent(searchParams.get("model")!) : models[1].id;
   const [selectedModel, setSelectedModel] = useState(initialModel);
-  const [messages, setMessages] = useState<Message[]>([
-    { role: "assistant", content: "Hi! I'm an OpenRouter clone. Select a model from the top and start chatting. This is a UI demo – responses are mocked but the interface matches OpenRouter's playground." },
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const { t } = useI18n();
+
+  useEffect(() => {
+    setMessages([{ role: "assistant", content: t.chat.welcome }]);
+  }, [t.chat.welcome]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -40,7 +44,7 @@ export default function ChatClient() {
     <div className="flex h-[calc(100vh-56px)] flex-col">
       <div className="flex items-center gap-3 border-b border-zinc-800 bg-zinc-950 px-4 py-3">
         <div className="flex items-center gap-2 text-[12px] text-zinc-400">
-          <Settings2 className="h-4 w-4" /> Model:
+          <Settings2 className="h-4 w-4" /> {t.chat.modelLabel}
         </div>
         <select
           value={selectedModel}
@@ -56,14 +60,14 @@ export default function ChatClient() {
 
         <div className="ml-auto hidden items-center gap-2 md:flex">
           <span className="text-[11px] text-zinc-500">
-            Context: {models.find((m) => m.id === selectedModel)?.contextLength.toLocaleString()} tokens
+            {t.chat.context}: {models.find((m) => m.id === selectedModel)?.contextLength.toLocaleString()} {t.chat.tokens}
           </span>
           <div className="h-4 w-px bg-zinc-800" />
           <button
-            onClick={() => setMessages([messages[0]])}
+            onClick={() => setMessages([{ role: "assistant", content: t.chat.welcome }])}
             className="inline-flex items-center gap-1 rounded-md border border-zinc-800 bg-zinc-900 px-2.5 py-1 text-[12px] text-zinc-400 hover:bg-zinc-800 hover:text-white"
           >
-            <Trash2 className="h-3.5 w-3.5" /> Clear
+            <Trash2 className="h-3.5 w-3.5" /> {t.chat.clear}
           </button>
         </div>
       </div>
@@ -79,7 +83,7 @@ export default function ChatClient() {
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
-                      <span className="text-[13px] font-semibold text-white">{m.role === "user" ? "You" : models.find((x) => x.id === selectedModel)?.name || "Assistant"}</span>
+                      <span className="text-[13px] font-semibold text-white">{m.role === "user" ? t.chat.you : models.find((x) => x.id === selectedModel)?.name || "Assistant"}</span>
                       {m.role === "assistant" && (
                         <span className="rounded bg-zinc-800 px-1.5 py-0.5 text-[10px] text-zinc-400">{selectedModel}</span>
                       )}
@@ -125,7 +129,7 @@ export default function ChatClient() {
                       send();
                     }
                   }}
-                  placeholder="Message the model... (Shift+Enter for new line)"
+                  placeholder={t.chat.placeholder}
                   rows={1}
                   className="max-h-32 min-h-[36px] flex-1 resize-none bg-transparent px-2 py-2 text-[14px] text-white placeholder:text-zinc-600 focus:outline-none"
                 />
@@ -138,19 +142,19 @@ export default function ChatClient() {
                 </button>
               </div>
               <p className="mt-2 text-center text-[11px] text-zinc-600">
-                Demo playground – no real API calls. Connect your own API key in Keys page to make it live.
+                {t.chat.demoNote}
               </p>
             </div>
           </div>
         </div>
 
         <div className="hidden w-[300px] shrink-0 border-l border-zinc-800 bg-zinc-950/50 p-4 lg:block">
-          <h3 className="text-[12px] font-semibold uppercase tracking-wider text-zinc-500">Parameters</h3>
+          <h3 className="text-[12px] font-semibold uppercase tracking-wider text-zinc-500">{t.chat.parameters}</h3>
           <div className="mt-4 space-y-5">
             {[
-              { label: "Temperature", value: "0.7", min: "0", max: "2", desc: "Controls randomness" },
-              { label: "Top P", value: "1.0", min: "0", max: "1", desc: "Nucleus sampling" },
-              { label: "Max Tokens", value: "1024", min: "1", max: "4096", desc: "Response length" },
+              { label: t.chat.temperature, value: "0.7", desc: t.chat.descTemp },
+              { label: t.chat.topP, value: "1.0", desc: t.chat.descTopP },
+              { label: t.chat.maxTokens, value: "1024", desc: t.chat.descMax },
             ].map((p) => (
               <div key={p.label}>
                 <div className="flex items-center justify-between">
@@ -162,17 +166,17 @@ export default function ChatClient() {
               </div>
             ))}
             <div className="rounded-lg border border-zinc-800 bg-zinc-900/50 p-3">
-              <div className="text-[11px] font-medium text-white">Estimated cost</div>
+              <div className="text-[11px] font-medium text-white">{t.chat.estimatedCost}</div>
               <div className="mt-1 flex items-baseline gap-2">
                 <span className="text-[18px] font-semibold text-white">$0.0023</span>
-                <span className="text-[11px] text-zinc-500">this chat</span>
+                <span className="text-[11px] text-zinc-500">{t.chat.thisChat}</span>
               </div>
               <div className="mt-2 h-1 w-full rounded-full bg-zinc-800">
                 <div className="h-full w-[45%] rounded-full bg-white" />
               </div>
               <div className="mt-1.5 flex justify-between text-[10px] text-zinc-500">
-                <span>342 input tokens</span>
-                <span>128 output</span>
+                <span>342 {t.chat.inputTokens}</span>
+                <span>128 {t.chat.output}</span>
               </div>
             </div>
           </div>

@@ -1,9 +1,11 @@
 "use client";
 import { models } from "@/lib/models";
 import { Trophy, TrendingUp } from "lucide-react";
+import { useI18n } from "@/components/I18nProvider";
 
 export default function RankingsPage() {
   const ranked = [...models].sort((a, b) => b.stats.throughput - a.stats.throughput);
+  const { t } = useI18n();
 
   return (
     <div className="mx-auto max-w-[1200px] px-4 py-8 sm:px-6">
@@ -12,18 +14,18 @@ export default function RankingsPage() {
           <Trophy className="h-5 w-5" />
         </div>
         <div>
-          <h1 className="text-[24px] font-semibold text-white">Rankings</h1>
-          <p className="text-[13px] text-zinc-400">Top models by usage last 7 days. Real OpenRouter updates hourly.</p>
+          <h1 className="text-[24px] font-semibold text-white">{t.rankingsPage.title}</h1>
+          <p className="text-[13px] text-zinc-400">{t.rankingsPage.desc}</p>
         </div>
       </div>
 
       <div className="mt-8 overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/30">
         <div className="grid grid-cols-12 gap-4 border-b border-zinc-800 bg-zinc-900/50 px-4 py-3 text-[11px] uppercase tracking-wider text-zinc-500">
           <div className="col-span-1">#</div>
-          <div className="col-span-5">Model</div>
-          <div className="col-span-2">Tokens (7d)</div>
-          <div className="col-span-2">Growth</div>
-          <div className="col-span-2 text-right">Price</div>
+          <div className="col-span-5">{t.rankingsPage.model}</div>
+          <div className="col-span-2">{t.rankingsPage.tokens}</div>
+          <div className="col-span-2">{t.rankingsPage.growth}</div>
+          <div className="col-span-2 text-right">{t.rankingsPage.price}</div>
         </div>
 
         {ranked.map((m, i) => (

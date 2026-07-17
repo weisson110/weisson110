@@ -4,9 +4,11 @@ import { models } from "@/lib/models";
 import ModelCard from "@/components/ModelCard";
 import Link from "next/link";
 import { ArrowRight, Zap, Shield, Code2, Globe, Layers, Cpu } from "lucide-react";
+import { useI18n } from "@/components/I18nProvider";
 
 export default function HomePage() {
   const [search, setSearch] = useState("");
+  const { t } = useI18n();
 
   const filtered = models.filter(
     (m) =>
@@ -17,7 +19,6 @@ export default function HomePage() {
 
   return (
     <div className="relative">
-      {/* Hero */}
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 grid-pattern opacity-40" />
         <div className="glow absolute -top-[300px] left-1/2 h-[600px] w-[800px] -translate-x-1/2 rounded-full bg-gradient-to-br from-violet-500 to-indigo-500" />
@@ -27,18 +28,17 @@ export default function HomePage() {
           <div className="mx-auto max-w-3xl text-center">
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-zinc-800 bg-zinc-900/50 px-3 py-1 text-[12px] text-zinc-400 backdrop-blur">
               <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
-              All systems operational • 99.99% uptime
+              {t.home.badge}
             </div>
 
             <h1 className="bg-gradient-to-b from-white to-zinc-400 bg-clip-text text-4xl font-semibold tracking-tight text-transparent sm:text-5xl lg:text-[56px] lg:leading-[1.05]">
-              The Unified
+              {t.home.title1}
               <br />
-              Interface For LLMs
+              {t.home.title2}
             </h1>
 
             <p className="mx-auto mt-5 max-w-xl text-[15px] leading-relaxed text-zinc-400 sm:text-[16px]">
-              A single API for hundreds of AI models. Better prices, better uptime, no subscription.
-              Access GPT-4o, Claude 3.5, Gemini, Llama and more.
+              {t.home.subtitle}
             </p>
 
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
@@ -46,35 +46,33 @@ export default function HomePage() {
                 href="/models"
                 className="inline-flex h-[40px] items-center gap-2 rounded-md bg-white px-5 text-[14px] font-semibold text-black transition hover:bg-zinc-200"
               >
-                Explore Models <ArrowRight className="h-4 w-4" />
+                {t.home.exploreModels} <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
                 href="/chat"
                 className="inline-flex h-[40px] items-center gap-2 rounded-md border border-zinc-800 bg-zinc-900/80 px-5 text-[14px] font-medium text-white backdrop-blur transition hover:bg-zinc-800"
               >
                 <Code2 className="h-4 w-4" />
-                Try Playground
+                {t.home.tryPlayground}
               </Link>
             </div>
 
-            {/* Stats */}
             <div className="mt-12 grid grid-cols-3 gap-6 border-y border-zinc-800/80 py-8 text-left sm:gap-8">
               <div>
                 <div className="text-[22px] font-semibold text-white">200+</div>
-                <div className="mt-1 text-[12px] text-zinc-500">AI Models</div>
+                <div className="mt-1 text-[12px] text-zinc-500">{t.home.statModels}</div>
               </div>
               <div>
                 <div className="text-[22px] font-semibold text-white">50+</div>
-                <div className="mt-1 text-[12px] text-zinc-500">Providers</div>
+                <div className="mt-1 text-[12px] text-zinc-500">{t.home.statProviders}</div>
               </div>
               <div>
                 <div className="text-[22px] font-semibold text-white">$0</div>
-                <div className="mt-1 text-[12px] text-zinc-500">To start, pay as you go</div>
+                <div className="mt-1 text-[12px] text-zinc-500">{t.home.statStart}</div>
               </div>
             </div>
           </div>
 
-          {/* Code demo */}
           <div className="mx-auto mt-14 max-w-4xl">
             <div className="overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/50 backdrop-blur">
               <div className="flex items-center justify-between border-b border-zinc-800 bg-zinc-900/80 px-4 py-2.5">
@@ -83,7 +81,7 @@ export default function HomePage() {
                   <span className="h-2.5 w-2.5 rounded-full bg-yellow-500/80" />
                   <span className="h-2.5 w-2.5 rounded-full bg-green-500/80" />
                 </div>
-                <span className="text-[11px] font-medium text-zinc-500">openai-compatible • curl example</span>
+                <span className="text-[11px] font-medium text-zinc-500">{t.home.codeHeader}</span>
                 <div className="h-2 w-8" />
               </div>
               <div className="grid lg:grid-cols-[1.2fr_0.8fr]">
@@ -107,15 +105,15 @@ const completion = await openai.chat.completions.create({
 console.log(completion.choices[0].message)`}</code>
                 </pre>
                 <div className="border-t border-zinc-800 bg-zinc-950/50 p-5 lg:border-l lg:border-t-0">
-                  <h4 className="text-[13px] font-semibold text-white">One API, Hundreds of Models</h4>
+                  <h4 className="text-[13px] font-semibold text-white">{t.home.codeTitle}</h4>
                   <ul className="mt-4 space-y-3 text-[12.5px] text-zinc-400">
-                    <li className="flex gap-2"><Zap className="h-4 w-4 text-violet-400" /> Automatic fallbacks & retries</li>
-                    <li className="flex gap-2"><Shield className="h-4 w-4 text-emerald-400" /> Load balancing & caching</li>
-                    <li className="flex gap-2"><Globe className="h-4 w-4 text-blue-400" /> 200+ models, 50+ providers</li>
-                    <li className="flex gap-2"><Layers className="h-4 w-4 text-amber-400" /> Unified billing & keys</li>
+                    <li className="flex gap-2"><Zap className="h-4 w-4 text-violet-400" /> {t.home.codeFeatures[0]}</li>
+                    <li className="flex gap-2"><Shield className="h-4 w-4 text-emerald-400" /> {t.home.codeFeatures[1]}</li>
+                    <li className="flex gap-2"><Globe className="h-4 w-4 text-blue-400" /> {t.home.codeFeatures[2]}</li>
+                    <li className="flex gap-2"><Layers className="h-4 w-4 text-amber-400" /> {t.home.codeFeatures[3]}</li>
                   </ul>
                   <div className="mt-6 rounded-lg border border-zinc-800 bg-zinc-900 p-3">
-                    <div className="text-[11px] font-medium text-zinc-500">Monthly tokens processed</div>
+                    <div className="text-[11px] font-medium text-zinc-500">{t.home.tokensProcessed}</div>
                     <div className="mt-1 text-[20px] font-semibold text-white">12.4T</div>
                     <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-zinc-800">
                       <div className="h-full w-[78%] rounded-full bg-white" />
@@ -128,7 +126,6 @@ console.log(completion.choices[0].message)`}</code>
         </div>
       </div>
 
-      {/* Trusted */}
       <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8">
         <div className="flex flex-wrap items-center justify-center gap-6 border-b border-zinc-900 py-8 opacity-60">
           {["Linear", "Vercel", "Perplexity", "Superhuman", "Notion", "Retool"].map((brand) => (
@@ -137,24 +134,23 @@ console.log(completion.choices[0].message)`}</code>
         </div>
       </div>
 
-      {/* Models Section */}
       <div className="mx-auto max-w-[1440px] px-4 py-16 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <h2 className="text-2xl font-semibold tracking-tight text-white">Popular Models</h2>
+            <h2 className="text-2xl font-semibold tracking-tight text-white">{t.home.popularModels}</h2>
             <p className="mt-2 max-w-lg text-[13.5px] text-zinc-400">
-              Access the best models via a single OpenAI-compatible API. Auto-routing, fallbacks, and lower prices.
+              {t.home.popularDesc}
             </p>
           </div>
           <div className="flex gap-2">
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Filter models (e.g. Claude, vision)"
+              placeholder={t.home.filterPlaceholder}
               className="h-9 w-[260px] rounded-md border border-zinc-800 bg-zinc-900 px-3 text-[13px] placeholder:text-zinc-600 focus:border-zinc-700 focus:outline-none"
             />
             <Link href="/models" className="inline-flex h-9 items-center rounded-md border border-zinc-800 bg-zinc-900 px-3 text-[13px] font-medium text-zinc-300 hover:bg-zinc-800 hover:text-white">
-              View all
+              {t.home.viewAll}
             </Link>
           </div>
         </div>
@@ -166,21 +162,21 @@ console.log(completion.choices[0].message)`}</code>
         </div>
       </div>
 
-      {/* Features */}
       <div className="border-t border-zinc-900 bg-zinc-950/50">
         <div className="mx-auto max-w-[1440px] px-4 py-20 sm:px-6 lg:px-8">
           <div className="grid gap-6 md:grid-cols-3">
-            {[
-              { icon: Cpu, title: "Unified API", desc: "OpenAI-compatible API for 200+ models. Switch models with one line. No vendor lock-in.", color: "text-violet-400" },
-              { icon: Shield, title: "Higher Uptime", desc: "Automatic fallbacks, load balancing, and retries across multiple providers.", color: "text-emerald-400" },
-              { icon: Globe, title: "Better Prices", desc: "Find the best price for any model. Save up to 80% vs direct provider APIs.", color: "text-blue-400" },
-            ].map((f) => (
-              <div key={f.title} className="rounded-xl border border-zinc-800 bg-zinc-900/30 p-6">
-                <f.icon className={`h-5 w-5 ${f.color}`} />
-                <h3 className="mt-4 text-[15px] font-semibold text-white">{f.title}</h3>
-                <p className="mt-2 text-[13px] leading-relaxed text-zinc-400">{f.desc}</p>
-              </div>
-            ))}
+            {t.home.features.map((f, idx) => {
+              const icons = [Cpu, Shield, Globe];
+              const Icon = icons[idx];
+              const colors = ["text-violet-400", "text-emerald-400", "text-blue-400"];
+              return (
+                <div key={f.title} className="rounded-xl border border-zinc-800 bg-zinc-900/30 p-6">
+                  <Icon className={`h-5 w-5 ${colors[idx]}`} />
+                  <h3 className="mt-4 text-[15px] font-semibold text-white">{f.title}</h3>
+                  <p className="mt-2 text-[13px] leading-relaxed text-zinc-400">{f.desc}</p>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>

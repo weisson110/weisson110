@@ -4,11 +4,13 @@ import { models } from "@/lib/models";
 import Link from "next/link";
 import { ArrowLeft, Copy, Check, Globe, Clock, Cpu, DollarSign, BarChart3 } from "lucide-react";
 import { useState } from "react";
+import { useI18n } from "@/components/I18nProvider";
 
 export default function ModelDetailPage() {
   const params = useParams();
   const id = decodeURIComponent(params.id as string);
   const [copied, setCopied] = useState(false);
+  const { t } = useI18n();
 
   const model = models.find((m) => m.id === id) || models[0];
 
@@ -34,11 +36,10 @@ const res = await client.chat.completions.create({
   return (
     <div className="mx-auto max-w-[1440px] px-4 py-6 sm:px-6 lg:px-8">
       <Link href="/models" className="inline-flex items-center gap-1.5 text-[13px] text-zinc-400 hover:text-white">
-        <ArrowLeft className="h-3.5 w-3.5" /> Back to models
+        <ArrowLeft className="h-3.5 w-3.5" /> {t.modelDetail.back}
       </Link>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_360px]">
-        {/* Main */}
         <div>
           <div className="flex items-start gap-4">
             <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-zinc-800 bg-zinc-900 text-xl font-bold">
@@ -69,16 +70,15 @@ const res = await client.chat.completions.create({
             </div>
           </div>
 
-          {/* Code */}
           <div className="mt-8 overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/50">
             <div className="flex items-center justify-between border-b border-zinc-800 bg-zinc-900 px-4 py-2.5">
-              <span className="text-[12px] font-medium text-zinc-300">Integration</span>
+              <span className="text-[12px] font-medium text-zinc-300">{t.modelDetail.integration}</span>
               <button
                 onClick={copyCode}
                 className="inline-flex items-center gap-1.5 rounded-md border border-zinc-700 bg-zinc-800 px-2.5 py-1 text-[11px] text-zinc-300 hover:bg-zinc-700"
               >
                 {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
-                {copied ? "Copied" : "Copy"}
+                {copied ? t.modelDetail.copied : t.modelDetail.copy}
               </button>
             </div>
             <pre className="overflow-x-auto p-4 text-[12px] leading-relaxed text-zinc-300">
@@ -86,12 +86,11 @@ const res = await client.chat.completions.create({
             </pre>
           </div>
 
-          {/* Capabilities */}
           <div className="mt-6 grid gap-4 sm:grid-cols-3">
             {[
-              { icon: Cpu, label: "Context", value: `${model.contextLength.toLocaleString()} tokens` },
-              { icon: DollarSign, label: "Input / Output", value: `$${model.pricing.input} / $${model.pricing.output} per 1M` },
-              { icon: BarChart3, label: "Throughput", value: `${model.stats.throughput} tok/s • ${model.stats.latency}ms` },
+              { icon: Cpu, label: t.modelDetail.context, value: `${model.contextLength.toLocaleString()} tokens` },
+              { icon: DollarSign, label: t.modelDetail.inputOutput, value: `$${model.pricing.input} / $${model.pricing.output} per 1M` },
+              { icon: BarChart3, label: t.modelDetail.throughput, value: `${model.stats.throughput} tok/s • ${model.stats.latency}ms` },
             ].map((item) => (
               <div key={item.label} className="rounded-xl border border-zinc-800 bg-zinc-900/30 p-4">
                 <div className="flex items-center gap-2 text-zinc-500">
@@ -103,16 +102,15 @@ const res = await client.chat.completions.create({
             ))}
           </div>
 
-          {/* Providers */}
           <div className="mt-8">
-            <h3 className="text-[14px] font-semibold text-white">Providers</h3>
+            <h3 className="text-[14px] font-semibold text-white">{t.modelDetail.providers}</h3>
             <div className="mt-3 space-y-2">
               {[model.provider, "Together", "Fireworks", "Groq"].slice(0, 3).map((p, i) => (
                 <div key={p} className="flex items-center justify-between rounded-lg border border-zinc-800 bg-zinc-900/40 px-4 py-3">
                   <div className="flex items-center gap-3">
                     <div className="h-2 w-2 rounded-full bg-emerald-500" />
                     <span className="text-[13px] text-white">{p}</span>
-                    {i === 0 && <span className="rounded bg-emerald-500/10 px-1.5 py-0.5 text-[10px] text-emerald-400">Primary</span>}
+                    {i === 0 && <span className="rounded bg-emerald-500/10 px-1.5 py-0.5 text-[10px] text-emerald-400">{t.modelDetail.primary}</span>}
                   </div>
                   <div className="flex items-center gap-4 text-[11px] text-zinc-500">
                     <span>120 tok/s</span>
@@ -125,40 +123,39 @@ const res = await client.chat.completions.create({
           </div>
         </div>
 
-        {/* Sidebar */}
         <div className="space-y-4">
           <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-5">
-            <h3 className="text-[13px] font-semibold text-white">Try this model</h3>
+            <h3 className="text-[13px] font-semibold text-white">{t.modelDetail.tryModel}</h3>
             <Link
               href={`/chat?model=${encodeURIComponent(model.id)}`}
               className="mt-3 inline-flex w-full items-center justify-center rounded-md bg-white py-2.5 text-[13px] font-semibold text-black hover:bg-zinc-200"
             >
-              Open in Playground
+              {t.modelDetail.openPlayground}
             </Link>
             <div className="mt-4 space-y-3 text-[12px]">
               <div className="flex justify-between">
-                <span className="text-zinc-500">Context length</span>
+                <span className="text-zinc-500">{t.modelDetail.contextLength}</span>
                 <span className="text-white">{model.contextLength.toLocaleString()}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-zinc-500">Training cutoff</span>
+                <span className="text-zinc-500">{t.modelDetail.trainingCutoff}</span>
                 <span className="text-white">2024-06</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-zinc-500">Function calling</span>
-                <span className="text-emerald-400">Supported</span>
+                <span className="text-zinc-500">{t.modelDetail.functionCalling}</span>
+                <span className="text-emerald-400">{t.modelDetail.supported}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-zinc-500">Structured output</span>
-                <span className="text-emerald-400">Supported</span>
+                <span className="text-zinc-500">{t.modelDetail.structuredOutput}</span>
+                <span className="text-emerald-400">{t.modelDetail.supported}</span>
               </div>
             </div>
           </div>
 
           <div className="rounded-xl border border-zinc-800 bg-zinc-900/30 p-5">
-            <h3 className="text-[13px] font-semibold text-white">API Endpoint</h3>
+            <h3 className="text-[13px] font-semibold text-white">{t.modelDetail.apiEndpoint}</h3>
             <code className="mt-2 block rounded bg-zinc-950 p-2 text-[11px] text-zinc-400">POST https://openrouter.ai/api/v1/chat/completions</code>
-            <h4 className="mt-4 text-[12px] font-medium text-white">Headers</h4>
+            <h4 className="mt-4 text-[12px] font-medium text-white">{t.modelDetail.headers}</h4>
             <div className="mt-2 space-y-1 text-[11px] font-mono text-zinc-500">
               <div>Authorization: Bearer &lt;key&gt;</div>
               <div>HTTP-Referer: &lt;your site&gt;</div>
@@ -168,7 +165,7 @@ const res = await client.chat.completions.create({
 
           <div className="rounded-xl border border-amber-900/30 bg-amber-950/20 p-4">
             <p className="text-[12px] leading-relaxed text-amber-200/80">
-              This is a clone demo. Real openrouter.ai provides billing, key management, analytics, and routing to actual providers.
+              {t.modelDetail.demoNote}
             </p>
           </div>
         </div>

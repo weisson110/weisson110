@@ -4,6 +4,7 @@ import { models as allModels, providers, Model } from "@/lib/models";
 import ModelCard from "@/components/ModelCard";
 import { Search, SlidersHorizontal, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/components/I18nProvider";
 
 export default function ModelsPage() {
   const [query, setQuery] = useState("");
@@ -11,6 +12,7 @@ export default function ModelsPage() {
   const [sortBy, setSortBy] = useState<"popular" | "new" | "price" | "context">("popular");
   const [showVisionOnly, setShowVisionOnly] = useState(false);
   const [showFree, setShowFree] = useState(false);
+  const { t } = useI18n();
 
   const filtered = useMemo(() => {
     let res: Model[] = [...allModels];
@@ -52,18 +54,16 @@ export default function ModelsPage() {
 
   return (
     <div className="mx-auto max-w-[1440px] px-4 py-6 sm:px-6 lg:px-8">
-      {/* Header */}
       <div className="flex flex-col gap-4 py-6">
-        <h1 className="text-[28px] font-semibold tracking-tight text-white">Models</h1>
+        <h1 className="text-[28px] font-semibold tracking-tight text-white">{t.modelsPage.title}</h1>
         <p className="max-w-2xl text-[13.5px] text-zinc-400">
-          Browse 200+ models across 50+ providers. One API key, OpenAI compatible, with fallbacks and load balancing.
+          {t.modelsPage.desc}
           <span className="ml-2 inline-flex items-center rounded bg-zinc-800 px-1.5 py-0.5 text-[11px] text-zinc-400">
-            {filtered.length} models
+            {filtered.length} {t.modelsPage.modelsCount}
           </span>
         </p>
       </div>
 
-      {/* Filters Bar */}
       <div className="sticky top-[56px] z-20 -mx-4 border-y border-zinc-800/80 bg-zinc-950/80 px-4 py-3 backdrop-blur-xl sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex flex-1 items-center gap-2">
@@ -72,7 +72,7 @@ export default function ModelsPage() {
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search by name, provider, capability..."
+                placeholder={t.modelsPage.searchPlaceholder}
                 className="h-9 w-full rounded-md border border-zinc-800 bg-zinc-900 pl-9 pr-8 text-[13px] placeholder:text-zinc-600 focus:border-zinc-700 focus:outline-none"
               />
               {query && (
@@ -94,7 +94,7 @@ export default function ModelsPage() {
                   onChange={(e) => setShowVisionOnly(e.target.checked)}
                   className="rounded border-zinc-700 bg-zinc-900"
                 />
-                Vision
+                {t.modelsPage.vision}
               </label>
               <label className="flex items-center gap-1.5 text-[12px] text-zinc-400">
                 <input
@@ -103,7 +103,7 @@ export default function ModelsPage() {
                   onChange={(e) => setShowFree(e.target.checked)}
                   className="rounded border-zinc-700 bg-zinc-900"
                 />
-                Free
+                {t.modelsPage.free}
               </label>
             </div>
           </div>
@@ -133,17 +133,16 @@ export default function ModelsPage() {
                 onChange={(e) => setSortBy(e.target.value as any)}
                 className="h-8 rounded-md border border-zinc-800 bg-zinc-900 px-2 text-[12px] text-zinc-300 focus:border-zinc-700 focus:outline-none"
               >
-                <option value="popular">Top monthly</option>
-                <option value="new">Newest</option>
-                <option value="price">Lowest price</option>
-                <option value="context">Longest context</option>
+                <option value="popular">{t.modelsPage.sortTop}</option>
+                <option value="new">{t.modelsPage.sortNew}</option>
+                <option value="price">{t.modelsPage.sortPrice}</option>
+                <option value="context">{t.modelsPage.sortContext}</option>
               </select>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Grid */}
       <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {filtered.map((m) => (
           <ModelCard key={m.id} model={m} />
@@ -152,7 +151,7 @@ export default function ModelsPage() {
 
       {filtered.length === 0 && (
         <div className="py-20 text-center">
-          <p className="text-sm text-zinc-500">No models match your filters</p>
+          <p className="text-sm text-zinc-500">{t.modelsPage.noMatch}</p>
           <button
             onClick={() => {
               setQuery("");
@@ -162,24 +161,23 @@ export default function ModelsPage() {
             }}
             className="mt-3 text-xs text-white underline"
           >
-            Clear filters
+            {t.modelsPage.clearFilters}
           </button>
         </div>
       )}
 
-      {/* Info */}
       <div className="mt-12 grid gap-4 border-t border-zinc-900 pt-8 md:grid-cols-3">
         <div className="rounded-lg border border-zinc-800 bg-zinc-900/30 p-4">
-          <h4 className="text-[13px] font-medium text-white">What is context length?</h4>
-          <p className="mt-1 text-[12px] text-zinc-400">Maximum tokens model can process in one request. 1K ~ 750 words.</p>
+          <h4 className="text-[13px] font-medium text-white">{t.modelsPage.infoContextTitle}</h4>
+          <p className="mt-1 text-[12px] text-zinc-400">{t.modelsPage.infoContextDesc}</p>
         </div>
         <div className="rounded-lg border border-zinc-800 bg-zinc-900/30 p-4">
-          <h4 className="text-[13px] font-medium text-white">Pricing per 1M tokens</h4>
-          <p className="mt-1 text-[12px] text-zinc-400">Input = prompt tokens, Output = completion tokens. Pay only what you use.</p>
+          <h4 className="text-[13px] font-medium text-white">{t.modelsPage.infoPricingTitle}</h4>
+          <p className="mt-1 text-[12px] text-zinc-400">{t.modelsPage.infoPricingDesc}</p>
         </div>
         <div className="rounded-lg border border-zinc-800 bg-zinc-900/30 p-4">
-          <h4 className="text-[13px] font-medium text-white">OpenAI Compatible</h4>
-          <p className="mt-1 text-[12px] text-zinc-400">Change baseURL to openrouter.ai/api/v1, reuse OpenAI SDK. Drop-in replacement.</p>
+          <h4 className="text-[13px] font-medium text-white">{t.modelsPage.infoCompatTitle}</h4>
+          <p className="mt-1 text-[12px] text-zinc-400">{t.modelsPage.infoCompatDesc}</p>
         </div>
       </div>
     </div>

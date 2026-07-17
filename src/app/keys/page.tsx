@@ -1,9 +1,11 @@
 "use client";
 import { useState } from "react";
 import { Key, Copy, Eye, EyeOff, Trash2, Plus } from "lucide-react";
+import { useI18n } from "@/components/I18nProvider";
 
 export default function KeysPage() {
   const [showKey, setShowKey] = useState<string | null>(null);
+  const { t } = useI18n();
   const [keys, setKeys] = useState([
     { id: "or-123", name: "Production", key: "sk-or-v1-abc123def456ghi789jkl012mno345pqr678stu901vwx234", created: "2024-09-12", lastUsed: "2 hours ago", usage: "$12.34" },
     { id: "or-124", name: "Development", key: "sk-or-v1-xyz987wvu654tsr321qpo098nml765kji432hgf109edc876", created: "2024-10-01", lastUsed: "Never", usage: "$0.00" },
@@ -13,8 +15,8 @@ export default function KeysPage() {
     <div className="mx-auto max-w-[1000px] px-4 py-8 sm:px-6">
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-[24px] font-semibold text-white">API Keys</h1>
-          <p className="mt-1 text-[13px] text-zinc-400">Manage your OpenRouter API keys. Keep them secret!</p>
+          <h1 className="text-[24px] font-semibold text-white">{t.keysPage.title}</h1>
+          <p className="mt-1 text-[13px] text-zinc-400">{t.keysPage.desc}</p>
         </div>
         <button
           onClick={() => {
@@ -23,7 +25,7 @@ export default function KeysPage() {
           }}
           className="inline-flex items-center gap-1.5 rounded-md bg-white px-3 py-2 text-[13px] font-semibold text-black hover:bg-zinc-200"
         >
-          <Plus className="h-4 w-4" /> Create Key
+          <Plus className="h-4 w-4" /> {t.keysPage.createKey}
         </button>
       </div>
 
@@ -50,15 +52,15 @@ export default function KeysPage() {
                     </button>
                   </div>
                   <div className="mt-1.5 flex gap-3 text-[11px] text-zinc-500">
-                    <span>Created {k.created}</span>
-                    <span>• Last used {k.lastUsed}</span>
-                    <span>• {k.usage} used</span>
+                    <span>{t.keysPage.created} {k.created}</span>
+                    <span>• {t.keysPage.lastUsed} {k.lastUsed}</span>
+                    <span>• {k.usage} {t.keysPage.used}</span>
                   </div>
                 </div>
               </div>
               <div className="flex items-center gap-2">
                 <button className="rounded-md border border-zinc-800 bg-zinc-900 px-3 py-1.5 text-[12px] text-zinc-400 hover:bg-zinc-800 hover:text-white">
-                  Edit
+                  {t.keysPage.edit}
                 </button>
                 <button onClick={() => setKeys(keys.filter((x) => x.id !== k.id))} className="rounded-md border border-red-900/50 bg-red-950/30 px-3 py-1.5 text-[12px] text-red-400 hover:bg-red-950/50">
                   <Trash2 className="h-3.5 w-3.5" />
@@ -71,7 +73,7 @@ export default function KeysPage() {
 
       <div className="mt-8 grid gap-4 md:grid-cols-2">
         <div className="rounded-xl border border-zinc-800 bg-zinc-900/30 p-5">
-          <h3 className="text-[13px] font-semibold text-white">Quickstart</h3>
+          <h3 className="text-[13px] font-semibold text-white">{t.keysPage.quickstart}</h3>
           <pre className="mt-3 overflow-x-auto rounded-lg bg-zinc-950 p-3 text-[11px] text-zinc-300">
             <code>{`curl https://openrouter.ai/api/v1/chat/completions \\
   -H "Authorization: Bearer $OPENROUTER_API_KEY" \\
@@ -83,20 +85,20 @@ export default function KeysPage() {
           </pre>
         </div>
         <div className="rounded-xl border border-zinc-800 bg-zinc-900/30 p-5">
-          <h3 className="text-[13px] font-semibold text-white">Billing</h3>
+          <h3 className="text-[13px] font-semibold text-white">{t.keysPage.billing}</h3>
           <div className="mt-3">
             <div className="text-[24px] font-semibold text-white">$12.34</div>
-            <div className="text-[12px] text-zinc-500">Current month usage</div>
+            <div className="text-[12px] text-zinc-500">{t.keysPage.currentUsage}</div>
             <div className="mt-4 h-2 w-full overflow-hidden rounded-full bg-zinc-800">
               <div className="h-full w-[34%] rounded-full bg-white" />
             </div>
             <div className="mt-2 flex justify-between text-[11px] text-zinc-500">
               <span>$0</span>
-              <span>$50 credits included</span>
+              <span>$50 {t.keysPage.creditsIncluded}</span>
             </div>
           </div>
           <div className="mt-4 rounded-lg bg-amber-950/20 p-3 text-[11px] text-amber-200/70">
-            This is a demo clone – no real billing occurs. In production, you would add credits via Stripe, see analytics, set limits, etc.
+            {t.keysPage.demoNote}
           </div>
         </div>
       </div>
