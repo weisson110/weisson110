@@ -1,11 +1,7 @@
 "use client";
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
-<<<<<<< HEAD
-export type Lang = "en" | "zh";
-=======
 export type Lang = "en" | "zh" | "ms";
->>>>>>> f2715a2 (feat: full backend mock + EN/ZH/MS i18n default EN)
 
 type Translations = typeof en;
 
@@ -15,12 +11,9 @@ const en = {
     chat: "Chat",
     rankings: "Rankings",
     docs: "Docs",
-<<<<<<< HEAD
-=======
     activity: "Activity",
     credits: "Credits",
     settings: "Settings",
->>>>>>> f2715a2 (feat: full backend mock + EN/ZH/MS i18n default EN)
     searchPlaceholder: "Search models...",
     signIn: "Sign in",
     getApiKey: "Get API Key",
@@ -92,10 +85,6 @@ const en = {
     integration: "Integration",
     copy: "Copy",
     copied: "Copied",
-<<<<<<< HEAD
-    capabilities: "Capabilities",
-=======
->>>>>>> f2715a2 (feat: full backend mock + EN/ZH/MS i18n default EN)
     context: "Context",
     inputOutput: "Input / Output",
     throughput: "Throughput",
@@ -103,11 +92,7 @@ const en = {
     primary: "Primary",
     apiEndpoint: "API Endpoint",
     headers: "Headers",
-<<<<<<< HEAD
-    demoNote: "This is a clone demo. Real openrouter.ai provides billing, key management, analytics, and routing to actual providers.",
-=======
     demoNote: "This is a full mock backend. Replace with real provider routing in production.",
->>>>>>> f2715a2 (feat: full backend mock + EN/ZH/MS i18n default EN)
   },
   chat: {
     modelLabel: "Model:",
@@ -152,8 +137,6 @@ const en = {
     growth: "Growth",
     price: "Price",
   },
-<<<<<<< HEAD
-=======
   activityPage: {
     title: "Activity",
     desc: "Your recent generations, token usage and latency. Mock data – replace with real DB logs.",
@@ -198,7 +181,6 @@ const en = {
     saved: "Saved!",
     languageDesc: "Interface language. Default is English.",
   },
->>>>>>> f2715a2 (feat: full backend mock + EN/ZH/MS i18n default EN)
   docsPage: {
     title: "OpenRouter Clone Docs",
     subtitle: "Drop-in OpenAI-compatible API for all models.",
@@ -215,26 +197,6 @@ const en = {
     baseUrl: "Base URL",
     exampleRequest: "Example Request",
     cloneProject: "This Clone Project",
-<<<<<<< HEAD
-    cloneDesc: "This is a high-fidelity clone built with Next.js 14 + Tailwind. It includes:",
-    cloneList: [
-      "Landing page with hero, code demo, stats",
-      "Models listing with search, filters, sorting",
-      "Model detail with providers & code snippet",
-      "Chat playground (mocked streaming)",
-      "API Keys management UI",
-      "Rankings page",
-      "Dark theme matching openrouter.ai",
-      "English / Chinese i18n toggle",
-    ],
-    toMakeLive: "To make it fully functional:",
-    toMakeList: [
-      "Add backend route /api/chat/completions that proxies to OpenRouter or directly to providers",
-      "Store API keys in database (Prisma + Postgres)",
-      "Add auth via NextAuth / Clerk",
-      "Implement real billing via Stripe",
-      "Connect to OpenRouter API to fetch live models list: GET https://openrouter.ai/api/v1/models",
-=======
     cloneDesc: "Full-stack mock of OpenRouter with pluggable real backend:",
     cloneList: [
       "Landing page, Models, Rankings, Activity, Credits, Settings",
@@ -251,7 +213,6 @@ const en = {
       "Wire Stripe in src/app/api/v1/credits/route.ts",
       "Add NextAuth for real login – see src/app/api/v1/auth/me/route.ts",
       "Frontend already calls mock API – no change needed",
->>>>>>> f2715a2 (feat: full backend mock + EN/ZH/MS i18n default EN)
     ],
   },
   footer: {
@@ -264,12 +225,9 @@ const en = {
   },
   common: {
     language: "Language",
-<<<<<<< HEAD
-=======
     english: "English",
     chinese: "中文",
     malay: "Bahasa Melayu",
->>>>>>> f2715a2 (feat: full backend mock + EN/ZH/MS i18n default EN)
   },
 };
 
@@ -279,12 +237,9 @@ const zh = {
     chat: "对话",
     rankings: "排行榜",
     docs: "文档",
-<<<<<<< HEAD
-=======
     activity: "活动记录",
     credits: "余额计费",
     settings: "设置",
->>>>>>> f2715a2 (feat: full backend mock + EN/ZH/MS i18n default EN)
     searchPlaceholder: "搜索模型...",
     signIn: "登录",
     getApiKey: "获取 API Key",
@@ -351,10 +306,6 @@ const zh = {
     integration: "接入代码",
     copy: "复制",
     copied: "已复制",
-<<<<<<< HEAD
-    capabilities: "能力",
-=======
->>>>>>> f2715a2 (feat: full backend mock + EN/ZH/MS i18n default EN)
     context: "上下文",
     inputOutput: "输入 / 输出",
     throughput: "吞吐",
@@ -362,26 +313,16 @@ const zh = {
     primary: "主节点",
     apiEndpoint: "API 端点",
     headers: "请求头",
-<<<<<<< HEAD
-    demoNote: "这是克隆演示站，真实的 openrouter.ai 提供计费、密钥管理、分析和路由到真实提供商。",
-=======
     demoNote: "这是完整的前后端 Mock，已预留真实接入插槽，生产环境替换 openrouter-service 即可。",
->>>>>>> f2715a2 (feat: full backend mock + EN/ZH/MS i18n default EN)
   },
   chat: {
     modelLabel: "模型：",
     context: "上下文",
     tokens: "tokens",
     clear: "清空",
-<<<<<<< HEAD
-    welcome: "你好！我是 OpenRouter 克隆版。在顶部选择一个模型开始聊天。这是 UI 演示——回复是模拟的，但界面和 OpenRouter 的 playground 一致。",
-    placeholder: "给模型发消息... (Shift+回车换行)",
-    demoNote: "演示用 playground，无真实 API 调用。在 Keys 页面连接你的 API Key 即可变成真实对话。",
-=======
     welcome: "你好！我是 OpenRouter 克隆版。在顶部选择一个模型开始聊天，这是完整 Mock 后端，已记录到活动页。",
     placeholder: "给模型发消息... (Shift+回车换行)",
     demoNote: "Mock 后端已就绪，真实接入只需替换 Service 层，零前端改动。",
->>>>>>> f2715a2 (feat: full backend mock + EN/ZH/MS i18n default EN)
     parameters: "参数",
     temperature: "温度",
     topP: "Top P",
@@ -406,11 +347,7 @@ const zh = {
     quickstart: "快速开始",
     billing: "计费",
     currentUsage: "本月用量",
-<<<<<<< HEAD
-    demoNote: "这是演示克隆站，无真实扣费。生产环境中你会通过 Stripe 充值、查看分析、设置限额等。",
-=======
     demoNote: "这是完整的 Mock 后端，生产环境对接 Stripe 和数据库即可。",
->>>>>>> f2715a2 (feat: full backend mock + EN/ZH/MS i18n default EN)
     creditsIncluded: "包含额度",
   },
   rankingsPage: {
@@ -421,8 +358,6 @@ const zh = {
     growth: "增长",
     price: "价格",
   },
-<<<<<<< HEAD
-=======
   activityPage: {
     title: "活动记录",
     desc: "你的生成历史、Token 用量和延迟。Mock 数据，已预留真实 DB 接入。",
@@ -467,7 +402,6 @@ const zh = {
     saved: "已保存！",
     languageDesc: "界面语言，默认英文。",
   },
->>>>>>> f2715a2 (feat: full backend mock + EN/ZH/MS i18n default EN)
   docsPage: {
     title: "OpenRouter 克隆版文档",
     subtitle: "兼容 OpenAI 的多模型 API。",
@@ -484,26 +418,6 @@ const zh = {
     baseUrl: "Base URL",
     exampleRequest: "请求示例",
     cloneProject: "本克隆项目",
-<<<<<<< HEAD
-    cloneDesc: "这是一个用 Next.js 14 + Tailwind 高仿的克隆，包含：",
-    cloneList: [
-      "带 Hero、代码演示、统计的着陆页",
-      "支持搜索、筛选、排序的模型列表",
-      "带提供商和代码片段的模型详情",
-      "模拟流式的聊天 Playground",
-      "API Keys 管理界面",
-      "排行榜页面",
-      "匹配 openrouter.ai 的暗色主题",
-      "中英文一键切换",
-    ],
-    toMakeLive: "要变为可生产使用：",
-    toMakeList: [
-      "添加后端路由 /api/chat/completions 代理到 OpenRouter 或直连提供商",
-      "数据库存储 api_keys、usage_logs (Prisma + Postgres)",
-      "添加登录 (NextAuth / Clerk)",
-      "通过 Stripe 实现真实计费",
-      "对接 OpenRouter 官方接口获取实时模型列表：GET https://openrouter.ai/api/v1/models",
-=======
     cloneDesc: "完整的前后端 Mock，已预留真实后端插槽：",
     cloneList: [
       "着陆页、模型、排行、活动、余额、设置",
@@ -520,7 +434,6 @@ const zh = {
       "在 src/app/api/v1/credits/route.ts 对接 Stripe",
       "用 NextAuth 实现真实登录，参考 src/app/api/v1/auth/me/route.ts",
       "前端已调用 Mock API，无需改动",
->>>>>>> f2715a2 (feat: full backend mock + EN/ZH/MS i18n default EN)
     ],
   },
   footer: {
@@ -533,12 +446,6 @@ const zh = {
   },
   common: {
     language: "语言",
-<<<<<<< HEAD
-  },
-};
-
-export const translations = { en, zh };
-=======
     english: "English",
     chinese: "中文",
     malay: "Bahasa Melayu",
@@ -767,7 +674,6 @@ const ms = {
 };
 
 export const translations = { en, zh, ms };
->>>>>>> f2715a2 (feat: full backend mock + EN/ZH/MS i18n default EN)
 
 type I18nContextType = {
   lang: Lang;
@@ -782,32 +688,20 @@ export function I18nProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const saved = localStorage.getItem("lang") as Lang | null;
-<<<<<<< HEAD
-    if (saved && (saved === "en" || saved === "zh")) {
-      setLangState(saved);
-    } else {
-      const browserLang = navigator.language.toLowerCase();
-      if (browserLang.startsWith("zh")) setLangState("zh");
-=======
     if (saved && (saved === "en" || saved === "zh" || saved === "ms")) {
       setLangState(saved);
     } else {
-      // Default is English as requested, only auto-switch if explicit zh/ms
       const browserLang = navigator.language.toLowerCase();
       if (browserLang.startsWith("zh")) setLangState("zh");
       else if (browserLang.startsWith("ms") || browserLang.startsWith("id")) setLangState("ms");
       else setLangState("en");
->>>>>>> f2715a2 (feat: full backend mock + EN/ZH/MS i18n default EN)
     }
   }, []);
 
   const setLang = (l: Lang) => {
     setLangState(l);
     localStorage.setItem("lang", l);
-<<<<<<< HEAD
-=======
-    document.documentElement.lang = l;
->>>>>>> f2715a2 (feat: full backend mock + EN/ZH/MS i18n default EN)
+    if (typeof document !== "undefined") document.documentElement.lang = l;
   };
 
   const value: I18nContextType = {

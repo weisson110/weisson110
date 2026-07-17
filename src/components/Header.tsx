@@ -2,37 +2,20 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-<<<<<<< HEAD
-import { Search, Menu, X, Globe } from "lucide-react";
-import { useState } from "react";
-import { useI18n } from "./I18nProvider";
-=======
 import { Search, Menu, X, Globe, ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { useI18n, Lang } from "./I18nProvider";
->>>>>>> f2715a2 (feat: full backend mock + EN/ZH/MS i18n default EN)
 
 export default function Header() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
-<<<<<<< HEAD
-=======
   const [langMenuOpen, setLangMenuOpen] = useState(false);
->>>>>>> f2715a2 (feat: full backend mock + EN/ZH/MS i18n default EN)
   const { t, lang, setLang } = useI18n();
 
   const navItems = [
     { label: t.nav.models, href: "/models" },
     { label: t.nav.chat, href: "/chat" },
     { label: t.nav.rankings, href: "/rankings" },
-<<<<<<< HEAD
-    { label: t.nav.docs, href: "/docs" },
-  ];
-
-  const toggleLang = () => {
-    setLang(lang === "en" ? "zh" : "en");
-  };
-=======
     { label: t.nav.activity, href: "/activity" },
     { label: t.nav.docs, href: "/docs" },
   ];
@@ -44,7 +27,6 @@ export default function Header() {
   ];
 
   const currentLang = languages.find((l) => l.code === lang) || languages[0];
->>>>>>> f2715a2 (feat: full backend mock + EN/ZH/MS i18n default EN)
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-zinc-800/80 bg-zinc-950/80 backdrop-blur-xl supports-[backdrop-filter]:bg-zinc-950/60">
@@ -60,11 +42,7 @@ export default function Header() {
             </span>
           </Link>
 
-<<<<<<< HEAD
-          <nav className="hidden items-center gap-1 md:flex">
-=======
           <nav className="hidden items-center gap-1 lg:flex">
->>>>>>> f2715a2 (feat: full backend mock + EN/ZH/MS i18n default EN)
             {navItems.map((item) => (
               <Link
                 key={item.href}
@@ -96,17 +74,6 @@ export default function Header() {
             </div>
           </div>
 
-<<<<<<< HEAD
-          <button
-            onClick={toggleLang}
-            className="inline-flex h-8 items-center gap-1.5 rounded-md border border-zinc-800 bg-zinc-900 px-2.5 text-[12px] font-medium text-zinc-300 transition hover:bg-zinc-800 hover:text-white"
-            title="Switch language"
-          >
-            <Globe className="h-3.5 w-3.5" />
-            <span>{lang === "en" ? "EN" : "中"}</span>
-            <span className="hidden sm:inline text-[11px] text-zinc-500">/ {lang === "en" ? "中" : "EN"}</span>
-          </button>
-=======
           <div className="relative">
             <button
               onClick={() => setLangMenuOpen(!langMenuOpen)}
@@ -137,7 +104,6 @@ export default function Header() {
               </div>
             )}
           </div>
->>>>>>> f2715a2 (feat: full backend mock + EN/ZH/MS i18n default EN)
 
           <div className="hidden h-5 w-px bg-zinc-800 md:block" />
 
@@ -156,11 +122,7 @@ export default function Header() {
 
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-<<<<<<< HEAD
-            className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-zinc-800 bg-zinc-900 text-zinc-400 md:hidden"
-=======
             className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-zinc-800 bg-zinc-900 text-zinc-400 lg:hidden"
->>>>>>> f2715a2 (feat: full backend mock + EN/ZH/MS i18n default EN)
           >
             {mobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
           </button>
@@ -168,11 +130,7 @@ export default function Header() {
       </div>
 
       {mobileOpen && (
-<<<<<<< HEAD
-        <div className="border-t border-zinc-800 bg-zinc-950 px-4 py-4 md:hidden">
-=======
         <div className="border-t border-zinc-800 bg-zinc-950 px-4 py-4 lg:hidden">
->>>>>>> f2715a2 (feat: full backend mock + EN/ZH/MS i18n default EN)
           <nav className="flex flex-col gap-1">
             {navItems.map((item) => (
               <Link
@@ -189,14 +147,6 @@ export default function Header() {
                 {item.label}
               </Link>
             ))}
-<<<<<<< HEAD
-            <button
-              onClick={() => { toggleLang(); setMobileOpen(false); }}
-              className="mt-2 flex items-center gap-2 rounded-md border border-zinc-800 bg-zinc-900 px-3 py-2.5 text-[14px] text-zinc-300"
-            >
-              <Globe className="h-4 w-4" /> {lang === "en" ? "切换到中文" : "Switch to English"}
-            </button>
-=======
             <div className="mt-3 grid grid-cols-3 gap-2">
               {languages.map((l) => (
                 <button
@@ -216,7 +166,6 @@ export default function Header() {
                 </button>
               ))}
             </div>
->>>>>>> f2715a2 (feat: full backend mock + EN/ZH/MS i18n default EN)
           </nav>
         </div>
       )}
