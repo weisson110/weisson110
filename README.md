@@ -128,3 +128,23 @@ src/
 ## License
 
 MIT - 仅供学习演示，使用了类似 OpenRouter 的设计。
+
+## 一键部署到公网
+
+点击按钮直接部署到 Vercel (免费，会给你一个 https://xxx.vercel.app 的公网链接)：
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/weisson110/weisson110&project-name=openrouter-clone&branch=arena/019f6ede-weisson110&root-directory=/)
+
+### 或其他平台
+
+**Render / Railway / Fly.io / Docker 任意平台**
+
+```bash
+# Docker
+docker build -t openrouter-clone .
+docker run -p 3000:3000 openrouter-clone
+# 访问 http://localhost:3000
+```
+
+所有平台都只需 `npm install && npm run build && npm start`。
+
