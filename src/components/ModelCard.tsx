@@ -1,10 +1,10 @@
 "use client";
 import { Model } from "@/lib/models";
 import Link from "next/link";
-import { useI18n } from "./I18nProvider";
+import { useI18n, formatPricePerM } from "./I18nProvider";
 
 export default function ModelCard({ model }: { model: Model }) {
-  const { t } = useI18n();
+  const { t, currency } = useI18n();
   return (
     <Link
       href={`/models/${encodeURIComponent(model.id)}`}
@@ -59,11 +59,11 @@ export default function ModelCard({ model }: { model: Model }) {
         </div>
         <div>
           <div className="text-[10px] uppercase tracking-wider text-zinc-500">{t.modelCard.input}</div>
-          <div className="mt-0.5 text-[12px] font-medium text-zinc-200">${model.pricing.input}/M</div>
+          <div className="mt-0.5 text-[12px] font-medium text-zinc-200">{formatPricePerM(model.pricing.input, currency as any)}</div>
         </div>
         <div>
           <div className="text-[10px] uppercase tracking-wider text-zinc-500">{t.modelCard.output}</div>
-          <div className="mt-0.5 text-[12px] font-medium text-zinc-200">${model.pricing.output}/M</div>
+          <div className="mt-0.5 text-[12px] font-medium text-zinc-200">{formatPricePerM(model.pricing.output, currency as any)}</div>
         </div>
       </div>
 
